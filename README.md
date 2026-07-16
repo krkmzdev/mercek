@@ -20,14 +20,17 @@ Next.js 16 · tRPC v11 · Tailwind v4 · Prisma 7 + Postgres/pgvector · Better 
 
 ```
 apps/web            Next.js 16 App Router (landing + demo + case studies)
+packages/sdk        PUBLIC adapter contract (§8) + helpers — zero core deps
+packages/core       Engine: ingest, extract, KPI runner, benchmarks, registry
 packages/db         Prisma schema + client (§6 data model)
 packages/ui         Shared UI components + cn() helper
 packages/eslint-config  Shared flat ESLint config
+fixtures/           Synthetic sample datasets
 docs/               Adapter guide, v2 ideas
 docker-compose.yml  Prod DB (Postgres 16 + pgvector) — VDS deploy only
 ```
 
-`packages/core`, `packages/sdk`, and the five `adapter-*` packages land in S2+.
+The five `adapter-*` packages land in S3+. See `docs/adapter-guide.md`.
 
 ## Develop
 

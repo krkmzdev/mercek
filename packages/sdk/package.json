@@ -8,11 +8,17 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "decimal.js": "10.6.0",
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@mercek/eslint-config": "workspace:*",
     "eslint": "9.39.5",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
   }
 }

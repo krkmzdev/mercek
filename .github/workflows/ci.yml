@@ -39,5 +39,5 @@ jobs:
       - name: Test
         run: pnpm test
 
-      # TODO(S2): add the SDK-independence check (§4) once packages/sdk exists —
-      # assert @mercek/sdk has zero dependency on @mercek/core.
+      - name: SDK independence (§4)
+        run: pnpm check:sdk

@@ -14,7 +14,8 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md,mjs,json,yaml,yml}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,md,mjs,json,yaml,yml}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,mjs,json,yaml,yml}\"",
+    "check:sdk": "node scripts/check-sdk-independence.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
