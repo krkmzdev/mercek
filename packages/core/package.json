@@ -21,6 +21,8 @@
     "@aws-sdk/s3-request-presigner": "3.1088.0",
     "@mercek/db": "workspace:*",
     "@mercek/sdk": "workspace:*",
+    "@upstash/ratelimit": "2.0.8",
+    "@upstash/redis": "1.38.0",
     "ai": "7.0.29",
     "croner": "10.0.1",
     "exceljs": "4.4.0",

@@ -1,6 +1,7 @@
 export * from './extract/index';
 export * from './ingest/index';
 export * from './kpi/index';
+export * from './llm/index';
 export { enrich } from './analyze/enrich';
 export type { EnrichResult } from './analyze/enrich';
 export {
