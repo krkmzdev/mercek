@@ -42,9 +42,9 @@ describe('createLlmRouter (mock model, no live key)', () => {
     const result = await router.complete('analyze', { prompt: 'veriyi analiz et' });
 
     expect(result.data).toBe('analiz sonucu');
-    expect(seen).toEqual(['gemini-3-flash']); // analyze → gemini-3-flash (config)
+    expect(seen).toEqual(['gemini-flash-lite-latest']); // analyze → gemini-flash-lite-latest (config)
     expect(records[0]?.task).toBe('analyze');
-    expect(records[0]?.model).toBe('gemini-3-flash');
+    expect(records[0]?.model).toBe('gemini-flash-lite-latest');
   });
 
   it('returns a validated structured object when given a schema', async () => {
@@ -66,6 +66,6 @@ describe('createLlmRouter (mock model, no live key)', () => {
       },
     });
     await router.complete('analyze-deep', { prompt: 'x' });
-    expect(seen).toEqual(['gemini-3.1-pro']);
+    expect(seen).toEqual(['gemini-pro-latest']);
   });
 });
