@@ -9,3 +9,5 @@ pnpm-lock.yaml linguist-generated=true
 *.jpg binary
 *.webp binary
 *.pdf binary
+*.xlsx binary
+*.xls binary

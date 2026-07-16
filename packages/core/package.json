@@ -1,0 +1,42 @@
+{
+  "name": "@mercek/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./extract": "./src/extract/index.ts",
+    "./ingest": "./src/ingest/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "gen:fixtures": "tsx scripts/gen-fixtures.ts",
+    "verify:purge": "tsx scripts/verify-ingest-purge.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "4.0.17",
+    "@aws-sdk/client-s3": "3.1088.0",
+    "@aws-sdk/s3-request-presigner": "3.1088.0",
+    "@mercek/db": "workspace:*",
+    "@mercek/sdk": "workspace:*",
+    "ai": "7.0.29",
+    "croner": "10.0.1",
+    "exceljs": "4.4.0",
+    "papaparse": "5.5.4",
+    "unpdf": "1.6.2",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@mercek/eslint-config": "workspace:*",
+    "@types/node": "22.10.0",
+    "@types/papaparse": "5.5.2",
+    "dotenv": "17.4.2",
+    "eslint": "9.39.5",
+    "pdf-lib": "1.17.1",
+    "tsx": "4.23.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}
