@@ -1,0 +1,171 @@
+// Mercek — Prisma schema
+// Domain models: spec §6. Auth models: Better Auth (magic link).
+// Decimal discipline (§6): every persisted monetary/ratio value uses Decimal, never Float.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  // Prisma 7: connection URL lives in prisma.config.ts (CLI) and is passed to
+  // PrismaClient via a driver adapter (@prisma/adapter-pg). No `url` here.
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────────────────────
+// Enums (§6)
+// ─────────────────────────────────────────────────────────────
+
+enum SectorId {
+  RETAIL
+  FNB
+  FINANCE
+  MANUFACTURING
+  SAAS
+}
+
+enum AnalysisStatus {
+  PENDING
+  EXTRACTING
+  NORMALIZING
+  ANALYZING
+  COMPLETE
+  FAILED
+}
+
+// ─────────────────────────────────────────────────────────────
+// Domain models (§6)
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  analyses Analysis[]
+
+  // Better Auth relations
+  sessions Session[]
+  accounts Account[]
+
+  @@map("user")
+}
+
+model Analysis {
+  id     String         @id @default(cuid())
+  userId String? // null = guest
+  user   User?          @relation(fields: [userId], references: [id])
+  guestIp String? // hashed, for rate limiting
+  sector SectorId
+  status AnalysisStatus @default(PENDING)
+
+  sourceFiles SourceFile[]
+
+  canonical  Json? // adapter output, validated against canonicalSchema
+  mapping    Json? // ColumnMapping[] — the audit trail of how we got here
+  kpis       Json? // KpiResult[]
+  benchmarks Json? // BenchmarkComparison[]
+  insight    Json? // Insight (structured LLM output)
+
+  provider   String? // "google" | "anthropic" | "openai"
+  modelUsed  String?
+  tokensIn   Int?
+  tokensOut  Int?
+  costUsd    Decimal? @db.Decimal(10, 6)
+  durationMs Int?
+
+  error     String?
+  isFixture Boolean @default(false) // demo/sample runs, exempt from purge
+
+  createdAt DateTime @default(now())
+  purgeAt   DateTime // createdAt + 24h; cron deletes
+
+  @@index([userId])
+  @@index([purgeAt])
+  @@index([sector, isFixture])
+  @@map("analysis")
+}
+
+model SourceFile {
+  id         String   @id @default(cuid())
+  analysisId String
+  analysis   Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  r2Key      String
+  filename   String
+  mimeType   String
+  sizeBytes  Int
+  kind       String // "spreadsheet" | "pdf" | "image"
+  createdAt  DateTime @default(now())
+
+  @@index([analysisId])
+  @@map("source_file")
+}
+
+/// Sector knowledge base chunks for RAG. Seeded, not user-generated.
+model SectorKnowledge {
+  id        String                      @id @default(cuid())
+  sector    SectorId
+  title     String
+  content   String                      @db.Text
+  source    String // citation — never leave empty
+  embedding Unsupported("vector(768)")?
+
+  @@index([sector])
+  @@map("sector_knowledge")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Better Auth models (magic link). Verify with `better-auth generate`.
+// ─────────────────────────────────────────────────────────────
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}

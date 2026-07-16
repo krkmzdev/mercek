@@ -1,0 +1,25 @@
+{
+  "name": "mercek",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Sector-aware AI analyst — five domain experts, one framework.",
+  "packageManager": "pnpm@11.5.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,md,mjs,json,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,mjs,json,yaml,yml}\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "3.9.5",
+    "turbo": "2.10.5",
+    "typescript": "5.9.3"
+  }
+}

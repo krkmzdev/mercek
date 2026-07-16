@@ -1,0 +1,11 @@
+# Normalize line endings: LF in the repo, checkout as-is per platform.
+* text=auto eol=lf
+
+# Lockfiles and generated artifacts
+pnpm-lock.yaml linguist-generated=true
+
+# Binary types (safety)
+*.png binary
+*.jpg binary
+*.webp binary
+*.pdf binary

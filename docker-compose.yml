@@ -1,0 +1,23 @@
+# Production deploy target (spec §3 §13): single VDS, Docker Compose.
+# NOT used for local dev on constrained machines — local dev uses a hosted
+# Postgres (Neon). This file provisions Postgres 16 + pgvector for the VDS.
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mercek
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mercek}
+      POSTGRES_DB: mercek
+    ports:
+      - '5432:5432'
+    volumes:
+      - mercek_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U mercek -d mercek']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mercek_pgdata:
