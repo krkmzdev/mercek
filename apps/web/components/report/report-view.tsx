@@ -127,6 +127,8 @@ export function ReportViewComponent({ view }: { view: ReportView }) {
         </div>
       )}
 
+      {insight.plainSummary && <PlainSummary summary={insight.plainSummary} />}
+
       {/* Hero */}
       <section className="grid grid-cols-1 items-center gap-6 rounded-2xl border border-border bg-surface p-7 sm:grid-cols-[1fr_auto]">
         <div>
@@ -280,6 +282,44 @@ export function ReportViewComponent({ view }: { view: ReportView }) {
         </span>
       </footer>
     </main>
+  );
+}
+
+const VERDICT_STYLE = {
+  iyi: { icon: '🟢', label: 'İyi', cls: 'text-positive', ring: 'border-positive/30 bg-positive/8' },
+  orta: { icon: '🟡', label: 'Orta', cls: 'text-warning', ring: 'border-warning/30 bg-warning/8' },
+  dikkat: { icon: '🔴', label: 'Dikkat', cls: 'text-critical', ring: 'border-critical/30 bg-critical/8' },
+} as const;
+
+function PlainSummary({ summary }: { summary: ReportView['insight']['plainSummary'] }) {
+  const v = VERDICT_STYLE[summary.verdict] ?? VERDICT_STYLE.orta;
+  return (
+    <section className={`mb-8 rounded-2xl border p-6 ${v.ring}`}>
+      <div className="flex items-center gap-2.5">
+        <span className="text-xl" aria-hidden>
+          {v.icon}
+        </span>
+        <span className={`font-mono text-xs font-semibold uppercase tracking-widest ${v.cls}`}>
+          Sade Özet · Genel Durum: {v.label}
+        </span>
+      </div>
+      <p className="mt-3 text-pretty text-lg font-medium leading-snug">{summary.headline}</p>
+      <div className="mt-4 flex flex-col gap-2.5 text-[0.95rem]">
+        <p className="flex gap-2.5">
+          <span aria-hidden>⚠️</span>
+          <span>
+            <span className="font-semibold">En önemli:</span> <span className="text-muted">{summary.whatMatters}</span>
+          </span>
+        </p>
+        <p className="flex gap-2.5">
+          <span aria-hidden>👉</span>
+          <span>
+            <span className="font-semibold">Yapılacak:</span> <span className="text-muted">{summary.whatToDo}</span>
+          </span>
+        </p>
+      </div>
+      <p className="mt-4 font-mono text-xs text-faint">Detaylı analiz ↓</p>
+    </section>
   );
 }
 

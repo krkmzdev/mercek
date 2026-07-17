@@ -118,6 +118,7 @@ function insightWith(kpiId: string | null): Insight {
     headline: 'h',
     healthScore: 50,
     summary: 's',
+    plainSummary: { verdict: 'orta', headline: 'sade', whatMatters: 'x', whatToDo: 'y' },
     findings: [finding, { ...finding, title: 'F2' }, { ...finding, title: 'F3' }],
     actions: [
       { priority: 1, title: 'a', rationale: 'r', expectedImpact: 'i', effort: 'low', relatedFindings: [] },

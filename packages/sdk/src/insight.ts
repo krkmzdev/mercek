@@ -11,6 +11,18 @@ export const InsightSchema = z.object({
   healthScore: z.number().min(0).max(100),
   summary: z.string(),
 
+  /**
+   * Plain-language summary for a non-technical business owner — no jargon
+   * (no "NRR", "OEE", "Quick Ratio"). Answers: how are things, what matters
+   * most, what to do. Rendered as the report's top "Sade Özet" panel.
+   */
+  plainSummary: z.object({
+    verdict: z.enum(['iyi', 'orta', 'dikkat']),
+    headline: z.string(),
+    whatMatters: z.string(),
+    whatToDo: z.string(),
+  }),
+
   findings: z
     .array(
       z.object({
