@@ -36,14 +36,62 @@ function Frame({ title, height, children }: { title: string; height: number; chi
 const tl = (v: number, frac = 0): string =>
   v.toLocaleString('tr-TR', { minimumFractionDigits: frac, maximumFractionDigits: frac });
 
+type BarLabelProps = {
+  x?: number | string;
+  y?: number | string;
+  width?: number | string;
+  height?: number | string;
+  value?: unknown;
+};
+
+/**
+ * Plain-SVG bar-end label. Unlike recharts' default label it never word-wraps
+ * (so "580.818 ₺" or "-66,5%" stay on one line) and it flips to the correct
+ * side for negative bars, so the value never lands on top of the category axis.
+ */
+function barLabel(props: BarLabelProps, format: (v: number) => string): React.ReactElement {
+  const x = Number(props.x ?? 0);
+  const y = Number(props.y ?? 0);
+  const width = Number(props.width ?? 0);
+  const height = Number(props.height ?? 0);
+  const value = Number(props.value ?? 0);
+  const negative = value < 0;
+  const pad = 5;
+  // recharts places negative bars with x at the zero baseline and a NEGATIVE
+  // width, so the bar's outer end is `x + width` for either sign.
+  const end = x + width;
+  return (
+    <text
+      x={negative ? end - pad : end + pad}
+      y={y + height / 2}
+      dy="0.32em"
+      textAnchor={negative ? 'end' : 'start'}
+      fill={AXIS}
+      fontSize={11}
+    >
+      {format(value)}
+    </text>
+  );
+}
+
+/** Symmetric, padded x-domain so diverging bars leave room for their end labels. */
+function signedDomain(values: number[]): [number, number] {
+  const maxAbs = Math.max(1, ...values.map((v) => Math.abs(v)));
+  const p = maxAbs * 1.5;
+  return [-p, p];
+}
+
+/** Right-padded x-domain (0→max) so bars don't touch the edge and labels fit. */
+const paddedMax = (m: number): number => m * 1.22;
+
 export function ParetoChart({ data }: { data: NonNullable<ReportCharts['pareto']> }) {
   return (
     <Frame title="En çok ciro yapan SKU’lar" height={Math.max(140, data.length * 34)}>
-      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 48, top: 4, bottom: 4 }}>
-        <XAxis type="number" hide />
+      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+        <XAxis type="number" domain={[0, paddedMax]} hide />
         <YAxis type="category" dataKey="label" width={110} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
         <Bar dataKey="value" fill={ACCENT} radius={[0, 4, 4, 0]} isAnimationActive={false}>
-          <LabelList dataKey="value" position="right" formatter={(v) => `${tl(Number(v))} ₺`} fill={AXIS} fontSize={11} />
+          <LabelList dataKey="value" content={(p) => barLabel(p, (v) => `${tl(v)} ₺`)} />
         </Bar>
       </BarChart>
     </Frame>
@@ -54,14 +102,14 @@ export function CategoryTrendChart({ data }: { data: NonNullable<ReportCharts['c
   const rows = [...data].sort((a, b) => a.changePct - b.changePct);
   return (
     <Frame title="Kategori ciro değişimi (ilk → son ay)" height={Math.max(140, rows.length * 34)}>
-      <BarChart data={rows} layout="vertical" margin={{ left: 8, right: 56, top: 4, bottom: 4 }}>
-        <XAxis type="number" hide />
+      <BarChart data={rows} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+        <XAxis type="number" domain={signedDomain(rows.map((r) => r.changePct))} hide />
         <YAxis type="category" dataKey="category" width={90} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
         <Bar dataKey="changePct" radius={[0, 4, 4, 0]} isAnimationActive={false}>
           {rows.map((r) => (
             <Cell key={r.category} fill={r.changePct < 0 ? CRITICAL : POSITIVE} />
           ))}
-          <LabelList dataKey="changePct" position="right" formatter={(v) => `${Number(v) > 0 ? '+' : ''}${tl(Number(v), 1)}%`} fill={AXIS} fontSize={11} />
+          <LabelList dataKey="changePct" content={(p) => barLabel(p, (v) => `${v > 0 ? '+' : ''}${tl(v, 1)}%`)} />
         </Bar>
       </BarChart>
     </Frame>
@@ -91,14 +139,14 @@ export function MenuMatrixChart({ data }: { data: NonNullable<ReportCharts['menu
 export function DaypartMarginChart({ data }: { data: NonNullable<ReportCharts['daypartMargin']> }) {
   return (
     <Frame title="Öğün bazlı food cost %" height={Math.max(140, data.length * 40)}>
-      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 48, top: 4, bottom: 4 }}>
-        <XAxis type="number" hide />
+      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+        <XAxis type="number" domain={[0, paddedMax]} hide />
         <YAxis type="category" dataKey="daypart" width={70} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
         <Bar dataKey="foodCostPct" radius={[0, 4, 4, 0]} isAnimationActive={false}>
           {data.map((d) => (
             <Cell key={d.daypart} fill={(d.foodCostPct ?? 0) > 40 ? CRITICAL : (d.foodCostPct ?? 0) > 32 ? WARNING : POSITIVE} />
           ))}
-          <LabelList dataKey="foodCostPct" position="right" formatter={(v) => `%${tl(Number(v), 1)}`} fill={AXIS} fontSize={11} />
+          <LabelList dataKey="foodCostPct" content={(p) => barLabel(p, (v) => `%${tl(v, 1)}`)} />
         </Bar>
       </BarChart>
     </Frame>
@@ -108,14 +156,14 @@ export function DaypartMarginChart({ data }: { data: NonNullable<ReportCharts['d
 export function RealReturnChart({ data }: { data: NonNullable<ReportCharts['realReturn']> }) {
   return (
     <Frame title="TÜFE-reel büyüme (yıllık)" height={170}>
-      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 56, top: 4, bottom: 4 }}>
-        <XAxis type="number" hide />
+      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+        <XAxis type="number" domain={signedDomain(data.map((d) => d.value))} hide />
         <YAxis type="category" dataKey="label" width={80} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
         <Bar dataKey="value" radius={[0, 4, 4, 0]} isAnimationActive={false}>
           {data.map((d) => (
             <Cell key={d.label} fill={d.value < 0 ? CRITICAL : d.label.toLowerCase().includes('tüfe') ? WARNING : ACCENT} />
           ))}
-          <LabelList dataKey="value" position="right" formatter={(v) => `%${tl(Number(v), 1)}`} fill={AXIS} fontSize={11} />
+          <LabelList dataKey="value" content={(p) => barLabel(p, (v) => `%${tl(v, 1)}`)} />
         </Bar>
       </BarChart>
     </Frame>
@@ -137,14 +185,14 @@ export function CccTrendChart({ data }: { data: NonNullable<ReportCharts['cccTre
 export function OeeDecompositionChart({ data }: { data: NonNullable<ReportCharts['oeeDecomposition']> }) {
   return (
     <Frame title="OEE ayrıştırması (A × P × Q)" height={190}>
-      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 52, top: 4, bottom: 4 }}>
-        <XAxis type="number" domain={[0, 100]} hide />
+      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+        <XAxis type="number" domain={[0, 122]} hide />
         <YAxis type="category" dataKey="label" width={110} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
         <Bar dataKey="value" radius={[0, 4, 4, 0]} isAnimationActive={false}>
           {data.map((d) => (
             <Cell key={d.label} fill={d.label.toLowerCase().includes('oee') ? ACCENT : d.value < 80 ? CRITICAL : POSITIVE} />
           ))}
-          <LabelList dataKey="value" position="right" formatter={(v) => `%${tl(Number(v), 1)}`} fill={AXIS} fontSize={11} />
+          <LabelList dataKey="value" content={(p) => barLabel(p, (v) => `%${tl(v, 1)}`)} />
         </Bar>
       </BarChart>
     </Frame>
@@ -155,14 +203,14 @@ export function MachineOeeChart({ data }: { data: NonNullable<ReportCharts['mach
   const rows = [...data].sort((a, b) => a.oee - b.oee);
   return (
     <Frame title="Makine bazlı OEE %" height={Math.max(140, rows.length * 34)}>
-      <BarChart data={rows} layout="vertical" margin={{ left: 8, right: 48, top: 4, bottom: 4 }}>
-        <XAxis type="number" domain={[0, 100]} hide />
+      <BarChart data={rows} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+        <XAxis type="number" domain={[0, 122]} hide />
         <YAxis type="category" dataKey="machine" width={60} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
         <Bar dataKey="oee" radius={[0, 4, 4, 0]} isAnimationActive={false}>
           {rows.map((d) => (
             <Cell key={d.machine} fill={d.oee < 60 ? CRITICAL : d.oee < 75 ? WARNING : POSITIVE} />
           ))}
-          <LabelList dataKey="oee" position="right" formatter={(v) => `%${tl(Number(v), 1)}`} fill={AXIS} fontSize={11} />
+          <LabelList dataKey="oee" content={(p) => barLabel(p, (v) => `%${tl(v, 1)}`)} />
         </Bar>
       </BarChart>
     </Frame>
@@ -173,14 +221,14 @@ export function DowntimeParetoChart({ data }: { data: NonNullable<ReportCharts['
   const rows = data.slice(0, 6);
   return (
     <Frame title="Duruş Pareto (dakika)" height={Math.max(140, rows.length * 34)}>
-      <BarChart data={rows} layout="vertical" margin={{ left: 8, right: 56, top: 4, bottom: 4 }}>
-        <XAxis type="number" hide />
+      <BarChart data={rows} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+        <XAxis type="number" domain={[0, paddedMax]} hide />
         <YAxis type="category" dataKey="reason" width={120} tick={{ fill: AXIS, fontSize: 11 }} axisLine={false} tickLine={false} />
         <Bar dataKey="downtimeMin" radius={[0, 4, 4, 0]} isAnimationActive={false}>
           {rows.map((d, i) => (
             <Cell key={d.reason} fill={i === 0 ? CRITICAL : ACCENT} />
           ))}
-          <LabelList dataKey="downtimeMin" position="right" formatter={(v) => `${tl(Number(v))} dk`} fill={AXIS} fontSize={11} />
+          <LabelList dataKey="downtimeMin" content={(p) => barLabel(p, (v) => `${tl(v)} dk`)} />
         </Bar>
       </BarChart>
     </Frame>
@@ -202,14 +250,14 @@ export function MrrTrendChart({ data }: { data: NonNullable<ReportCharts['mrrTre
 export function MrrMovementChart({ data }: { data: NonNullable<ReportCharts['mrrMovement']> }) {
   return (
     <Frame title="MRR hareketi (son ay)" height={190}>
-      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 56, top: 4, bottom: 4 }}>
-        <XAxis type="number" hide />
+      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+        <XAxis type="number" domain={signedDomain(data.map((d) => d.value))} hide />
         <YAxis type="category" dataKey="label" width={90} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
         <Bar dataKey="value" radius={[0, 4, 4, 0]} isAnimationActive={false}>
           {data.map((d) => (
             <Cell key={d.label} fill={d.value < 0 ? CRITICAL : POSITIVE} />
           ))}
-          <LabelList dataKey="value" position="right" formatter={(v) => tl(Number(v))} fill={AXIS} fontSize={11} />
+          <LabelList dataKey="value" content={(p) => barLabel(p, (v) => tl(v))} />
         </Bar>
       </BarChart>
     </Frame>
@@ -245,14 +293,14 @@ export function ReturnBySkuChart({ data }: { data: NonNullable<ReportCharts['ret
   const rows = data.slice(0, 6);
   return (
     <Frame title="SKU bazlı iade oranı" height={Math.max(140, rows.length * 34)}>
-      <BarChart data={rows} layout="vertical" margin={{ left: 8, right: 48, top: 4, bottom: 4 }}>
-        <XAxis type="number" hide />
+      <BarChart data={rows} layout="vertical" margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
+        <XAxis type="number" domain={[0, paddedMax]} hide />
         <YAxis type="category" dataKey="sku" width={80} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
         <Bar dataKey="returnRatePct" radius={[0, 4, 4, 0]} isAnimationActive={false}>
           {rows.map((r) => (
             <Cell key={r.sku} fill={r.returnRatePct >= 20 ? CRITICAL : r.returnRatePct >= 12 ? WARNING : ACCENT} />
           ))}
-          <LabelList dataKey="returnRatePct" position="right" formatter={(v) => `%${tl(Number(v), 1)}`} fill={AXIS} fontSize={11} />
+          <LabelList dataKey="returnRatePct" content={(p) => barLabel(p, (v) => `%${tl(v, 1)}`)} />
         </Bar>
       </BarChart>
     </Frame>
