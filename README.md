@@ -10,9 +10,32 @@ hâkim bir uzmanın gözüyle okur: içgörü, benchmark karşılaştırması ve
 
 _“Ham veri, uzman gözü.”_
 
+<br/>
+
+<img src="docs/screenshots/sade-ozet.png" alt="Mercek rapor — Sade Özet paneli" width="820" />
+
 </div>
 
 ---
+
+## Ekran görüntüleri
+
+| Rapor (Finans) | Menü mühendisliği (F&B) |
+|---|---|
+| <img src="docs/screenshots/rapor-finans.png" alt="Finans raporu" width="420" /> | <img src="docs/screenshots/rapor-menu.png" alt="F&B raporu — menü matrisi" width="420" /> |
+| **Sektör seçimi** | **Vaka çalışması** |
+| <img src="docs/screenshots/analiz.png" alt="Analiz — sektör seçici" width="420" /> | <img src="docs/screenshots/vaka.png" alt="Vaka çalışması" width="420" /> |
+
+Her rapor, teknik olmayan biri için **Sade Özet** (trafik ışığı + jargonsuz
+özet) ile başlar; altında formül ve kaynak hücresi taşıyan KPI kartları,
+bulgular, aksiyonlar ve sektöre özel grafikler yer alır.
+
+## Hemen dene
+
+- Uygulamada `Analize başla → sektör → Örnek veriyle dene` ile önceden hesaplanmış
+  (ücretsiz) raporları gör.
+- Ya da **kendi Excel’ini yükle** — `ornek-veriler/` klasöründe her sektör için
+  analiz edilebilir örnek `.xlsx` dosyaları var (sektör sayfasından da indirilebilir).
 
 ## Mercek nedir?
 

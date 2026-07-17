@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "gen:fixtures": "tsx scripts/gen-fixtures.ts",
+    "gen:ornek": "tsx scripts/gen-ornek-excel.ts",
     "verify:purge": "tsx scripts/verify-ingest-purge.ts",
     "verify:live": "tsx scripts/verify-live.ts",
     "demo:analyze": "tsx scripts/demo-analyze.ts"

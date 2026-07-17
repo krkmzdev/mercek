@@ -4,6 +4,14 @@ import { SiteHeader } from '@/components/site-header';
 import { UploadAnalyzer } from '@/components/upload-analyzer';
 import { SECTORS, sectorBySlug } from '@/lib/sectors';
 
+const ORNEK: Record<string, string> = {
+  perakende: 'perakende.xlsx',
+  restoran: 'restoran-fnb.xlsx',
+  finans: 'finans.xlsx',
+  uretim: 'uretim.xlsx',
+  saas: 'saas.xlsx',
+};
+
 export function generateStaticParams() {
   return SECTORS.map((s) => ({ slug: s.slug }));
 }
@@ -36,6 +44,13 @@ export default async function SectorAnalyzePage({ params }: { params: Promise<{ 
         <div className="mt-4 rounded-xl border border-border bg-surface2 p-4">
           <p className="font-mono text-[0.68rem] uppercase tracking-wide text-faint">Beklenen sütunlar</p>
           <p className="mt-1.5 font-mono text-xs text-muted">{s.dataShape}</p>
+          <a
+            href={`/ornek/${ORNEK[s.slug]}`}
+            download
+            className="mt-3 inline-flex items-center gap-1.5 font-mono text-xs text-accent underline-offset-4 hover:underline"
+          >
+            ⤓ Örnek Excel’i indir ve yükleyip dene
+          </a>
         </div>
 
         <div className="mt-6">

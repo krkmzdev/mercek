@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "seed:fixture": "tsx scripts/seed-fixture.ts"
+    "seed:fixture": "tsx scripts/seed-fixture.ts",
+    "screenshots": "tsx scripts/screenshots.ts"
   },
   "dependencies": {
     "@mercek/adapter-finance": "workspace:*",
@@ -45,6 +46,7 @@
     "@types/react-dom": "19.2.3",
     "dotenv": "17.4.2",
     "eslint": "9.39.5",
+    "playwright": "1.61.1",
     "tailwindcss": "4.3.3",
     "tsx": "4.23.1",
     "typescript": "5.9.3",
