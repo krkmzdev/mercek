@@ -4,6 +4,7 @@
 
 **Sektöre duyarlı AI analist: beş sektör uzmanı, tek çatı.**
 
+[![Canlı Demo](https://img.shields.io/badge/Canl%C4%B1_Demo-mercek--web.vercel.app-4fb08c?logo=vercel&logoColor=white)](https://mercek-web.vercel.app)
 [![CI](https://github.com/krkmzdev/mercek/actions/workflows/ci.yml/badge.svg)](https://github.com/krkmzdev/mercek/actions/workflows/ci.yml)
 [![Lisans: MIT](https://img.shields.io/badge/Lisans-MIT-2f7d63.svg)](LICENSE)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6.svg)
@@ -14,6 +15,8 @@ hâkim bir uzmanın gözüyle okur. Size içgörü, benchmark karşılaştırmas
 önerisi sunar; üstelik ürettiği her sayı, kaynak hücresine kadar izlenebilir.
 
 _“Ham veri, uzman gözü.”_
+
+**[🔍 Canlı demoyu aç →](https://mercek-web.vercel.app)**
 
 <br/>
 
@@ -37,11 +40,13 @@ taşıyan KPI kartları, bulgular, aksiyonlar ve sektöre özel grafikler yer al
 
 ## Hemen dene
 
-- Uygulamada `Analize başla → sektör → Örnek veriyle dene` yolunu izleyerek
-  önceden hesaplanmış ücretsiz raporları görebilirsiniz.
-- Dilerseniz kendi Excel dosyanızı da yükleyebilirsiniz. `ornek-veriler/`
-  klasöründe her sektör için analiz edilebilir örnek `.xlsx` dosyaları bulunur
-  (bu dosyalar sektör sayfasından da indirilebilir).
+- **Canlı demo: [mercek-web.vercel.app](https://mercek-web.vercel.app)** — beş
+  sektörün önceden hesaplanmış gerçek raporlarını gezin. Kötüye kullanımı ve
+  gereksiz LLM maliyetini önlemek için **canlı demoda dosya yükleme kapalıdır**;
+  demo tamamen sentetik örnek verilerle çalışır.
+- **Kendi verinizle denemek** isterseniz projeyi yerelde çalıştırın (aşağıdaki
+  kurulum). `ornek-veriler/` klasöründe her sektör için analiz edilebilir örnek
+  `.xlsx` dosyaları bulunur (bu dosyalar sektör sayfasından da indirilebilir).
 
 ## Mercek nedir?
 
@@ -194,6 +199,12 @@ pnpm dev                                        # http://localhost:3000
 Ortam değişkenlerinin tamamı için `.env.example` dosyasına bakın. Gizli anahtarlar
 `.env` dosyalarında tutulur ve git’e **gönderilmez**.
 
+**Salt-okunur demo modu:** `NEXT_PUBLIC_UPLOADS_ENABLED=false` ayarlandığında dosya
+yükleme kapanır ve yalnızca önceden hesaplanmış örnek raporlar sunulur; böylece
+LLM maliyeti ve kötüye kullanım yüzeyi sıfır olur. Herkese açık [canlı
+demo](https://mercek-web.vercel.app) bu modda çalışır. Değişken ayarlanmazsa
+yükleme açıktır (yerel geliştirme).
+
 ## Testler ve eval
 
 ```bash
@@ -220,7 +231,8 @@ gerektiriyorsa, soyutlama sızıyor demektir.
 **Tamamlandı (S0-S8):** monorepo temeli · veri alma/çıkarım (vision ve locale
 sayı parser’ı) · adapter sözleşmesi ve KPI motoru · LLM katmanı (router, maliyet
 takibi, kanıt geçidi, rate limit) · beş sektör adapteri (evaller 3/3) · rapor
-arayüzü ve PDF · landing, vaka ve benchmark sayfaları.
+arayüzü ve PDF · landing, vaka ve benchmark sayfaları · **Vercel’de salt-okunur
+canlı demo** ([mercek-web.vercel.app](https://mercek-web.vercel.app)).
 
 **Bu bir demodur ve geliştirilmeye açıktır.** Mercek, bir portfolyo projesi
 olarak tasarlandı. Çekirdek analiz motoru ve beş sektör uçtan uca çalışır
@@ -231,7 +243,8 @@ durumdadır; ancak proje henüz üretim ölçeğinde bitmiş bir ürün değildi
 - Gerçek dosya depolama (Cloudflare R2) ve kalıcı rapor geçmişi.
 - Çoklu LLM sağlayıcı ve benchmark sayfasında sağlayıcılar arası karşılaştırma.
 - Kullanıcı hesapları ve kayıtlı çalışma alanları.
-- Üretim dağıtımı (`docker-compose.yml` bir VDS için hazırdır).
+- Dosya yüklemeli tam kendi-sunucu dağıtımı (`docker-compose.yml` bir VDS için
+  hazırdır; Vercel'deki canlı demo salt-okunurdur).
 - Video anlatımlar.
 
 ---
