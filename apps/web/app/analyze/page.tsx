@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { SiteHeader } from '@/components/site-header';
 import { SECTORS } from '@/lib/sectors';
+import { uploadsEnabled } from '@/lib/config';
 
 export const metadata = { title: 'Analiz — Mercek' };
 
@@ -13,8 +14,9 @@ export default function AnalyzePage() {
           <p className="font-mono text-xs uppercase tracking-widest text-accent">Analiz</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight">Sektörünü seç</h1>
           <p className="mt-2 max-w-prose text-muted">
-            Kendi verini yükle ya da sentetik örnek veriyle dene. Her sektörün kendi KPI’ları, benchmark’ları ve uzman
-            prompt’u var.
+            {uploadsEnabled
+              ? 'Kendi verini yükle ya da sentetik örnek veriyle dene. Her sektörün kendi KPI’ları, benchmark’ları ve uzman prompt’u var.'
+              : 'Bu canlı bir demo: dosya yükleme kapalı. Her sektör için sentetik örnek veriyle hazırlanmış gerçek raporları inceleyebilirsin. Her sektörün kendi KPI’ları, benchmark’ları ve uzman prompt’u var.'}
           </p>
         </div>
 
@@ -33,7 +35,7 @@ export default function AnalyzePage() {
               <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-wide text-accent">{s.signature.title}</p>
               <div className="mt-4 flex-1" />
               <span className="inline-flex w-fit items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-90">
-                Verini yükle veya örnek dene →
+                {uploadsEnabled ? 'Verini yükle veya örnek dene →' : 'Örnek raporu incele →'}
               </span>
             </Link>
           ))}

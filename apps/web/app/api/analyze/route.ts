@@ -35,6 +35,15 @@ function guestIp(req: Request): string {
 }
 
 export async function POST(req: Request): Promise<NextResponse> {
+  // Public demo: uploads disabled → only the pre-computed sample reports are
+  // served. Guards the endpoint even if the UI is bypassed.
+  if (process.env.NEXT_PUBLIC_UPLOADS_ENABLED === 'false') {
+    return NextResponse.json(
+      { error: 'Bu demo sürümünde dosya yükleme kapalı. Örnek raporları inceleyebilirsiniz.' },
+      { status: 403 },
+    );
+  }
+
   let form: FormData;
   try {
     form = await req.formData();
