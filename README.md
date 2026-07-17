@@ -40,9 +40,9 @@ taşıyan KPI kartları, bulgular, aksiyonlar ve sektöre özel grafikler yer al
 
 ## Hemen dene
 
-- **Canlı demo: [mercek-web.vercel.app](https://mercek-web.vercel.app)** — beş
-  sektörün önceden hesaplanmış gerçek raporlarını gezin. Kötüye kullanımı ve
-  gereksiz LLM maliyetini önlemek için **canlı demoda dosya yükleme kapalıdır**;
+- **Canlı demo: [mercek-web.vercel.app](https://mercek-web.vercel.app)** ile beş
+  sektörün önceden hesaplanmış gerçek raporlarını gezebilirsiniz. Kötüye kullanımı
+  ve gereksiz LLM maliyetini önlemek için **canlı demoda dosya yükleme kapalıdır**;
   demo tamamen sentetik örnek verilerle çalışır.
 - **Kendi verinizle denemek** isterseniz projeyi yerelde çalıştırın (aşağıdaki
   kurulum). `ornek-veriler/` klasöründe her sektör için analiz edilebilir örnek
