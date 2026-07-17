@@ -2,17 +2,17 @@
 
 # Mercek
 
-**Sektör-farkında AI analist — beş sektör uzmanı, tek çatı.**
+**Sektöre duyarlı AI analist: beş sektör uzmanı, tek çatı.**
 
-Ham operasyon verisini (Excel · CSV · PDF · ekran görüntüsü), o sektörün diline
-hâkim bir uzmanın gözüyle okur: içgörü, benchmark karşılaştırması ve aksiyon —
-üstelik **her sayı kaynak hücresine kadar izlenebilir.**
+Ham operasyon verinizi (Excel, CSV, PDF, ekran görüntüsü), o sektörün diline
+hâkim bir uzmanın gözüyle okur. Size içgörü, benchmark karşılaştırması ve aksiyon
+önerisi sunar; üstelik ürettiği her sayı, kaynak hücresine kadar izlenebilir.
 
 _“Ham veri, uzman gözü.”_
 
 <br/>
 
-<img src="docs/screenshots/sade-ozet.png" alt="Mercek rapor — Sade Özet paneli" width="820" />
+<img src="docs/screenshots/sade-ozet.png" alt="Mercek rapor, Sade Özet paneli" width="820" />
 
 </div>
 
@@ -22,45 +22,70 @@ _“Ham veri, uzman gözü.”_
 
 | Rapor (Finans) | Menü mühendisliği (F&B) |
 |---|---|
-| <img src="docs/screenshots/rapor-finans.png" alt="Finans raporu" width="420" /> | <img src="docs/screenshots/rapor-menu.png" alt="F&B raporu — menü matrisi" width="420" /> |
+| <img src="docs/screenshots/rapor-finans.png" alt="Finans raporu" width="420" /> | <img src="docs/screenshots/rapor-menu.png" alt="F&B raporu, menü matrisi" width="420" /> |
 | **Sektör seçimi** | **Vaka çalışması** |
-| <img src="docs/screenshots/analiz.png" alt="Analiz — sektör seçici" width="420" /> | <img src="docs/screenshots/vaka.png" alt="Vaka çalışması" width="420" /> |
+| <img src="docs/screenshots/analiz.png" alt="Analiz, sektör seçici" width="420" /> | <img src="docs/screenshots/vaka.png" alt="Vaka çalışması" width="420" /> |
 
-Her rapor, teknik olmayan biri için **Sade Özet** (trafik ışığı + jargonsuz
-özet) ile başlar; altında formül ve kaynak hücresi taşıyan KPI kartları,
-bulgular, aksiyonlar ve sektöre özel grafikler yer alır.
+Her rapor, teknik olmayan biri için hazırlanan **Sade Özet** paneliyle başlar
+(trafik ışığı ve jargonsuz özet). Panelin altında; formül ve kaynak hücresi
+taşıyan KPI kartları, bulgular, aksiyonlar ve sektöre özel grafikler yer alır.
 
 ## Hemen dene
 
-- Uygulamada `Analize başla → sektör → Örnek veriyle dene` ile önceden hesaplanmış
-  (ücretsiz) raporları gör.
-- Ya da **kendi Excel’ini yükle** — `ornek-veriler/` klasöründe her sektör için
-  analiz edilebilir örnek `.xlsx` dosyaları var (sektör sayfasından da indirilebilir).
+- Uygulamada `Analize başla → sektör → Örnek veriyle dene` yolunu izleyerek
+  önceden hesaplanmış ücretsiz raporları görebilirsiniz.
+- Dilerseniz kendi Excel dosyanızı da yükleyebilirsiniz. `ornek-veriler/`
+  klasöründe her sektör için analiz edilebilir örnek `.xlsx` dosyaları bulunur
+  (bu dosyalar sektör sayfasından da indirilebilir).
 
 ## Mercek nedir?
 
-“Yapay zekâ tablonu okur” değil. Bir perakendeci ile bir üretim mühendisi aynı
-düşünmez; Mercek bu farkı **kod olarak** taşır: tek bir motorun arkasında **beş
-ayrı sektör beyni.** Yeni bir sektör eklemek = bir dosya + bir satır kayıt.
+“Yapay zekâ tablonuzu okur” demek yeterli değil. Bir perakendeci ile bir üretim
+mühendisi aynı biçimde düşünmez; Mercek bu farkı **kod olarak** taşır. Tek bir
+motorun arkasında **beş ayrı sektör beyni** çalışır. Yeni bir sektör eklemek, bir
+dosya ve tek satırlık bir kayıttan ibarettir.
 
-Generic AI araçları sektörden habersizdir — food cost’un ne olduğunu, OEE’yi ya
-da kohort retention’ı kavramazlar. Mercek’in farkı, her sektör için gerçek KPI
-sözlüğü, benchmark verisi, prompt paketi ve analiz şablonudur.
+Genel amaçlı AI araçları sektörden habersizdir; food cost’un ne olduğunu, OEE’yi
+ya da kohort retention’ı kavrayamazlar. Mercek’i ayıran şey, her sektör için
+hazırlanmış gerçek KPI sözlüğü, benchmark verisi, prompt paketi ve analiz
+şablonudur.
+
+## Ne işe yarar?
+
+Çoğu küçük ve orta ölçekli işletme, elindeki satış, üretim ya da finans
+verisinden anlamlı bir sonuç çıkaramaz; bunun için de pahalı bir danışmana veya
+tam zamanlı bir analiste ihtiyaç duyar. Mercek bu boşluğu doldurmayı hedefler:
+elinizdeki ham tabloyu yüklersiniz, karşılığında sektörünüze özgü bir
+değerlendirme alırsınız.
+
+Tipik kullanım senaryoları şunlardır:
+
+- **Dönemsel performans değerlendirmesi:** Hangi kategori büyüyor, hangisi
+  sessizce daralıyor?
+- **Sorun tespiti:** Yüksek iade oranı, düşük kârlılık ya da gizli bir üretim
+  darboğazı nerede?
+- **Kârlılık ve nakit takibi:** Nominal büyüme enflasyon karşısında gerçekten
+  değer üretiyor mu, nakit döngüsü uzuyor mu?
+- **Önceliklendirme:** Sınırlı zamanınızı hangi aksiyona ayırmalısınız?
+
+Genel amaçlı bir sohbet aracına tablo yapıştırmaktan temel farkı şudur: Mercek
+sektör bağlamını bilir ve **hiçbir sayıyı uydurmaz**. Veri eksikse bunu açıkça
+söyler, olmayan bir sonucu icat etmez.
 
 ## Neden farklı?
 
-- **Her sayı kaynağına iner.** Her KPI kendi formülünü ve onu üreten hücre
-  aralığını taşır. Arayüz, kaynağı olmayan bir sayıyı render **edemez** — “CSV’yi
-  sohbete yapıştır”dan ayıran şey budur.
+- **Her sayı kaynağına iner.** Her KPI, kendi formülünü ve onu üreten hücre
+  aralığını taşır. Arayüz, kaynağı olmayan bir sayıyı ekrana **getiremez**.
+  “CSV’yi sohbete yapıştır” yaklaşımından onu ayıran şey de budur.
 - **Uydurmaz, işaret eder.** Maliyet sütunu yoksa brüt marjı uydurmaz;
-  `kullanılamıyor` der ve analiz prompt’una bu eksikliği bildirir. Bir **kanıt
-  doğrulama geçidi**, hesaplanan KPI setinde olmayan bir sayıya dayanan her
+  `kullanılamıyor` der ve bu eksikliği analiz prompt’una bildirir. Bir **kanıt
+  doğrulama geçidi**, hesaplanan KPI setinde bulunmayan bir sayıya dayanan her
   bulguyu işaretler.
-- **Dürüst veri.** Örnek veriler tamamen sentetik ve açıkça etiketlidir;
-  benchmark’lar kaynak belirtir (ya da `Sentetik` der). Bu kısıtlar tip sistemi
-  tarafından zorunlu kılınır.
+- **Dürüst veri.** Örnek veriler tamamen sentetiktir ve açıkça etiketlenmiştir;
+  benchmark’lar ya kaynağını belirtir ya da `Sentetik` olduğunu söyler. Bu
+  kısıtlar, tip sistemi tarafından zorunlu kılınır.
 
-## Beş sektör — her biri bir imza hamlesiyle
+## Beş sektör, her biri bir imza hamlesiyle
 
 | Sektör | İmza hamle | Canlı eval |
 |---|---|---|
@@ -70,10 +95,10 @@ sözlüğü, benchmark verisi, prompt paketi ve analiz şablonudur.
 | **Üretim / İmalat** | **OEE = A×P×Q** + bağlayıcı kısıtı isimlendirir | AI 3/3 buldu |
 | **SaaS Metrikleri** | **Quick Ratio** ile sızdıran kovayı ifşa eder | AI 3/3 buldu |
 
-Her sektör, içine **kasıtlı sorunlar ve bir cevap anahtarı** yerleştirilmiş
-sentetik bir fixture ile gelir. Canlı-LLM eval’i, analizin bu sorunları bulup
-bulmadığını puanlar. **Beş sektörün tümü canlı Gemini ile 3/3 geçiyor** (toplam
-15/15 gizli sorun bulundu, analiz başına ≈ $0,0005 maliyet).
+Her sektör; içine **kasıtlı sorunlar ve bir cevap anahtarı** yerleştirilmiş
+sentetik bir veri seti ile gelir. Canlı LLM eval’i, analizin bu sorunları bulup
+bulamadığını puanlar. **Beş sektörün tümü, canlı Gemini ile 3/3 geçer** (toplam
+15 gizli sorunun 15’i bulundu, analiz başına yaklaşık $0,0005 maliyet).
 
 ## Nasıl çalışır?
 
@@ -81,16 +106,18 @@ bulmadığını puanlar. **Beş sektörün tümü canlı Gemini ile 3/3 geçiyor
 Yükle → Çıkar → Eşle → Hesapla → Analiz → Rapor
 ```
 
-1. **Yükle** — Excel, CSV, PDF veya ekran görüntüsü.
-2. **Çıkar** — Deterministik parser’lar veya Gemini vision; her tablo bir
-   `SourceRef` (kaynak referansı) taşır ve bu referans rapora kadar korunur.
-3. **Eşle** — Sektör adapteri dağınık başlıkları kanonik alanlara bağlar
-   (önce alias/fuzzy, gerekirse LLM).
-4. **Hesapla** — KPI motoru formül + kanıtla çalışır; eksik alan bir KPI’yı
-   temizce `kullanılamıyor`a düşürür, asla çökertmez.
-5. **Analiz** — Sektörün prompt paketiyle (persona + domain bilgisi + yöntem)
+1. **Yükle:** Excel, CSV, PDF veya ekran görüntüsü.
+2. **Çıkar:** Deterministik parser’lar ya da Gemini vision devreye girer; her
+   tablo bir `SourceRef` (kaynak referansı) taşır ve bu referans rapora kadar
+   korunur.
+3. **Eşle:** Sektör adapteri, dağınık başlıkları kanonik alanlara bağlar (önce
+   alias/fuzzy eşleştirme, gerekirse LLM).
+4. **Hesapla:** KPI motoru formül ve kanıtla çalışır; eksik bir alan, ilgili
+   KPI’yı temizce `kullanılamıyor` durumuna düşürür, sistemi asla çökertmez.
+5. **Analiz:** Sektörün prompt paketiyle (persona, alan bilgisi ve yöntem)
    yapılandırılmış içgörü üretilir; kanıt geçidi halüsinasyonu yakalar.
-6. **Rapor** — İçgörü, aksiyon, grafikler ve PDF; sağlık skoru ve veri boşlukları.
+6. **Rapor:** İçgörü, aksiyon, grafikler ve PDF; sağlık skoru ve veri
+   boşluklarıyla birlikte sunulur.
 
 ## Mimari
 
@@ -104,7 +131,7 @@ flowchart LR
   AN --> GATE["Kanıt geçidi"]
   GATE --> R["Rapor arayüzü + PDF"]
 
-  subgraph sdk["@mercek/sdk — public, motora sıfır bağımlı"]
+  subgraph sdk["@mercek/sdk (public, motora sıfır bağımlı)"]
     C["SectorAdapter sözleşmesi · yardımcılar"]
   end
   subgraph adapters["adapter-{retail,fnb,finance,manufacturing,saas}"]
@@ -114,14 +141,14 @@ flowchart LR
   MAP -. kullanır .-> adapters
 ```
 
-**Paket sınırı kuralı:** `@mercek/sdk`’nın `@mercek/core`’a **sıfır** bağımlılığı
-vardır — dışarıdan bir katkı sağlayıcı `npm i @mercek/sdk` yapıp motoru çekmeden
-adapter yazabilir. Bu kural CI’da denetlenir.
+**Paket sınırı kuralı:** `@mercek/sdk`, `@mercek/core`’a **sıfır** bağımlıdır.
+Dışarıdan bir katkı sağlayıcı, `npm i @mercek/sdk` yapıp motoru hiç çekmeden
+adapter yazabilir. Bu kural, CI tarafından denetlenir.
 
 ## Proje yapısı
 
 ```
-apps/web            Next.js 16 — landing · /vaka (vakalar) · /benchmark · /analyze · /r/[id] (rapor)
+apps/web            Next.js 16: landing · /vaka (vakalar) · /benchmark · /analyze · /r/[id] (rapor)
 packages/sdk        PUBLIC adapter sözleşmesi + yardımcılar (alias eşleştirici, locale sayı parser'ı)
 packages/core       Motor: ingest · extract (+vision) · KPI runner · benchmark · LLM router · analiz
 packages/adapter-*  Beş sektör (her biri yalnız sdk'ya bağımlı)
@@ -129,7 +156,7 @@ packages/db         Prisma 7 + Postgres/pgvector (§6 veri modeli)
 packages/ui         Paylaşımlı arayüz + cn()
 fixtures/           Sektör başına sentetik veri seti + cevap anahtarı
 docs/adapter-guide.md   "Kendi sektörünü ~200 satırda yaz"
-docker-compose.yml  Üretim veritabanı (Postgres 16 + pgvector) — VDS dağıtımı için
+docker-compose.yml  Üretim veritabanı (Postgres 16 + pgvector), VDS dağıtımı için
 ```
 
 ## Teknoloji
@@ -159,8 +186,8 @@ pnpm --filter @mercek/web seed:fixture         # 5 demo raporunu önceden hesapl
 pnpm dev                                        # http://localhost:3000
 ```
 
-Ortam değişkenleri için `.env.example`’a bakın. Gizli anahtarlar `.env`
-dosyalarında tutulur ve git’e **gönderilmez**.
+Ortam değişkenlerinin tamamı için `.env.example` dosyasına bakın. Gizli anahtarlar
+`.env` dosyalarında tutulur ve git’e **gönderilmez**.
 
 ## Testler ve eval
 
@@ -171,27 +198,36 @@ pnpm --filter @mercek/adapter-retail eval       # canlı LLM eval (bir sektör)
 ```
 
 **Eval en değerli test varlığıdır.** Her fixture bir cevap anahtarı taşır; eval,
-analizin yerleştirilmiş sorunları bulup bulmadığını ölçer. Prompt değiştiğinde
-çalıştırılır. (Evaller para/maliyet ve determinizm nedeniyle CI dışında,
-istendiğinde çalıştırılır.)
+analizin yerleştirilmiş sorunları bulup bulmadığını ölçer ve prompt her
+değiştiğinde çalıştırılır. Evaller, para/maliyet ve determinizm nedeniyle CI
+dışında, yalnızca istendiğinde koşar.
 
 ## Kendi sektörünü ekle
 
-**[docs/adapter-guide.md](docs/adapter-guide.md)** rehberine bakın: yalnızca
-`@mercek/sdk`’ya (tipler + saf yardımcılar, motor yok) karşı
-`SectorAdapter<TCanonical>` implemente edin, sonra tek bir `registerAdapter`
-satırı ekleyin. Bundan fazlasına mal oluyorsa, soyutlama sızdırmıştır.
+Ayrıntılar için **[docs/adapter-guide.md](docs/adapter-guide.md)** rehberine
+bakın. Yalnızca `@mercek/sdk`’ya (tipler ve saf yardımcılar; motor yok) dayanarak
+`SectorAdapter<TCanonical>` arayüzünü uygularsınız, ardından tek satırlık bir
+`registerAdapter` çağrısı eklersiniz. Bir sektör eklemek bundan fazla emek
+gerektiriyorsa, soyutlama sızıyor demektir.
 
-## Durum
+## Durum ve yol haritası
 
-**Tamamlandı (S0–S8):** monorepo temeli · veri alma/çıkarım (vision + locale
-sayı parser’ı) · adapter sözleşmesi + KPI motoru · LLM katmanı (router, maliyet,
-kanıt geçidi, rate limit) · beş sektör adapteri (evaller 3/3) · rapor arayüzü +
-PDF · landing/vaka/benchmark siteleri.
+**Tamamlandı (S0-S8):** monorepo temeli · veri alma/çıkarım (vision ve locale
+sayı parser’ı) · adapter sözleşmesi ve KPI motoru · LLM katmanı (router, maliyet
+takibi, kanıt geçidi, rate limit) · beş sektör adapteri (evaller 3/3) · rapor
+arayüzü ve PDF · landing, vaka ve benchmark sayfaları.
 
-**Ertelenen (opsiyonel):** Cloudflare R2 dosya depolama (motor bellekten çalışır)
-· Anthropic + OpenAI anahtarları (benchmark’ta çapraz-sağlayıcı sayıları) · video
-walkthrough’lar · üretim dağıtımı (`docker-compose.yml` VDS için hazır).
+**Bu bir demodur ve geliştirilmeye açıktır.** Mercek, bir portfolyo projesi
+olarak tasarlandı. Çekirdek analiz motoru ve beş sektör uçtan uca çalışır
+durumdadır; ancak proje henüz üretim ölçeğinde bitmiş bir ürün değildir ve tüm
+örnek veriler sentetiktir. İleride eklenmeye aday başlıklar şunlardır:
+
+- Daha fazla sektör adapteri (aynı sözleşmeyle).
+- Gerçek dosya depolama (Cloudflare R2) ve kalıcı rapor geçmişi.
+- Çoklu LLM sağlayıcı ve benchmark sayfasında sağlayıcılar arası karşılaştırma.
+- Kullanıcı hesapları ve kayıtlı çalışma alanları.
+- Üretim dağıtımı (`docker-compose.yml` bir VDS için hazırdır).
+- Video anlatımlar.
 
 ---
 
