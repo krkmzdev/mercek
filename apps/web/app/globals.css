@@ -1,29 +1,72 @@
 @import 'tailwindcss';
 
 /*
- * Mercek design tokens (spec §11 — anti-slop):
- * dark-first, high contrast, one restrained accent, semantic status colors.
- * No purple/indigo gradients, no glassmorphism, no neon.
+ * Mercek design tokens (spec §11 — anti-slop): dark-first, high contrast, one
+ * restrained accent (muted teal-green), semantic status colors. Theme-reactive:
+ * the @theme tokens point at --c-* vars that flip per light/dark.
  */
 @theme {
-  --font-sans:
-    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Segoe UI Mono', Menlo, Consolas, monospace;
 
-  --color-bg: #0a0a0b;
-  --color-surface: #131316;
-  --color-border: #26262b;
-  --color-fg: #ededef;
-  --color-muted: #9a9aa2;
-  --color-accent: #4a9d7f;
-
-  --color-critical: #e5484d;
-  --color-warning: #f5a623;
-  --color-opportunity: #3b82f6;
-  --color-positive: #46a758;
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface2: var(--c-surface2);
+  --color-border: var(--c-border);
+  --color-borderStrong: var(--c-border-strong);
+  --color-fg: var(--c-fg);
+  --color-muted: var(--c-muted);
+  --color-faint: var(--c-faint);
+  --color-accent: var(--c-accent);
+  --color-critical: var(--c-critical);
+  --color-warning: var(--c-warning);
+  --color-opportunity: var(--c-opportunity);
+  --color-positive: var(--c-positive);
 }
 
 :root {
-  color-scheme: dark;
+  --c-bg: #f7f7f5;
+  --c-surface: #ffffff;
+  --c-surface2: #f0f0ed;
+  --c-border: #e2e2dc;
+  --c-border-strong: #cfcfc7;
+  --c-fg: #1a1a18;
+  --c-muted: #6b6b64;
+  --c-faint: #93938a;
+  --c-accent: #2f7d63;
+  --c-critical: #c4383d;
+  --c-warning: #b57813;
+  --c-opportunity: #2563c9;
+  --c-positive: #2f8a44;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-bg: #0a0a0b;
+    --c-surface: #131316;
+    --c-surface2: #17171b;
+    --c-border: #26262b;
+    --c-border-strong: #35353c;
+    --c-fg: #ededef;
+    --c-muted: #9a9aa2;
+    --c-faint: #6b6b73;
+    --c-accent: #4fb08c;
+    --c-critical: #e5484d;
+    --c-warning: #f5a623;
+    --c-opportunity: #4f8ef0;
+    --c-positive: #4cc061;
+  }
+}
+
+:root[data-theme='light'] {
+  --c-bg: #f7f7f5; --c-surface: #ffffff; --c-surface2: #f0f0ed; --c-border: #e2e2dc;
+  --c-border-strong: #cfcfc7; --c-fg: #1a1a18; --c-muted: #6b6b64; --c-faint: #93938a;
+  --c-accent: #2f7d63; --c-critical: #c4383d; --c-warning: #b57813; --c-opportunity: #2563c9; --c-positive: #2f8a44;
+}
+:root[data-theme='dark'] {
+  --c-bg: #0a0a0b; --c-surface: #131316; --c-surface2: #17171b; --c-border: #26262b;
+  --c-border-strong: #35353c; --c-fg: #ededef; --c-muted: #9a9aa2; --c-faint: #6b6b73;
+  --c-accent: #4fb08c; --c-critical: #e5484d; --c-warning: #f5a623; --c-opportunity: #4f8ef0; --c-positive: #4cc061;
 }
 
 body {
@@ -33,12 +76,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.tnum { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Print / "Save as PDF": expand collapsibles, keep colors, drop chrome. */
+@media print {
+  :root { --c-bg: #ffffff; --c-surface: #ffffff; --c-surface2: #f4f4f2; --c-fg: #111; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .print\:hidden { display: none !important; }
+  details > *:not(summary) { display: block !important; }
+  details > summary { list-style: none; pointer-events: none; }
+  details summary span:last-child { display: none; }
+  section, details, .rounded-xl, .rounded-2xl { break-inside: avoid; }
 }

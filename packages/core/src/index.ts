@@ -4,6 +4,8 @@ export * from './kpi/index';
 export * from './llm/index';
 export { enrich } from './analyze/enrich';
 export type { EnrichResult } from './analyze/enrich';
+export { analyze } from './analyze/analyze';
+export type { AnalyzeResult } from './analyze/analyze';
 export {
   registerAdapter,
   getAdapter,
