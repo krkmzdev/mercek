@@ -1,0 +1,45 @@
+{
+  "sector": "FNB",
+  "fixtureId": "fnb-60d",
+  "rowCount": 5570,
+  "plantedProblems": [
+    {
+      "id": "menu-dog",
+      "signal": "menu",
+      "detail": "Deniz Mahsulü Güveç: menüde Köpek (Dog) — düşük popülerlik + düşük katkı payı.",
+      "keywords": [
+        "güveç",
+        "dog",
+        "köpek"
+      ]
+    },
+    {
+      "id": "menu-plowhorse",
+      "signal": "menu",
+      "detail": "Köfte: Beygir (Plowhorse) — yüksek popülerlik + düşük katkı payı (yeniden fiyatla/re-cost).",
+      "keywords": [
+        "köfte",
+        "plowhorse",
+        "beygir"
+      ]
+    },
+    {
+      "id": "lunch-unprofitable",
+      "signal": "daypartMargin",
+      "detail": "Öğle öğünü indirimli fiyat + yüksek food cost ile sessizce kârsız.",
+      "keywords": [
+        "öğle",
+        "öğün",
+        "lunch"
+      ],
+      "marginKeywords": [
+        "food cost",
+        "marj",
+        "kâr",
+        "zarar",
+        "yüksek maliyet",
+        "düşük"
+      ]
+    }
+  ]
+}

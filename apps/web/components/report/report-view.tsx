@@ -1,6 +1,14 @@
 import type { Finding } from '@mercek/sdk';
 import type { KpiView, ReportView } from '@/lib/report';
-import { CategoryTrendChart, ParetoChart, ReturnBySkuChart } from './charts';
+import {
+  CategoryTrendChart,
+  CccTrendChart,
+  DaypartMarginChart,
+  MenuMatrixChart,
+  ParetoChart,
+  RealReturnChart,
+  ReturnBySkuChart,
+} from './charts';
 import { PrintButton, ThemeToggle } from './interactive';
 
 const SEV = {
@@ -138,7 +146,7 @@ export function ReportViewComponent({ view }: { view: ReportView }) {
       </Section>
 
       {/* Charts */}
-      {(charts.pareto || charts.categoryTrend || charts.returnBySku) && (
+      {(charts.pareto || charts.categoryTrend || charts.returnBySku || charts.menuMatrix || charts.realReturn || charts.cccTrend) && (
         <Section title="Görselleştirmeler">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {charts.categoryTrend && <CategoryTrendChart data={charts.categoryTrend} />}
@@ -148,6 +156,14 @@ export function ReportViewComponent({ view }: { view: ReportView }) {
                 <ParetoChart data={charts.pareto} />
               </div>
             )}
+            {charts.menuMatrix && (
+              <div className="lg:col-span-2">
+                <MenuMatrixChart data={charts.menuMatrix} />
+              </div>
+            )}
+            {charts.daypartMargin && <DaypartMarginChart data={charts.daypartMargin} />}
+            {charts.realReturn && <RealReturnChart data={charts.realReturn} />}
+            {charts.cccTrend && <CccTrendChart data={charts.cccTrend} />}
           </div>
         </Section>
       )}

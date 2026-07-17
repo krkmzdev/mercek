@@ -1,0 +1,55 @@
+{
+  "sector": "FINANCE",
+  "fixtureId": "finance-8q",
+  "rowCount": 104,
+  "plantedProblems": [
+    {
+      "id": "real-contraction",
+      "signal": "realReturn",
+      "detail": "Nominal ciro +~%38 büyürken TÜFE +~%44 — reel olarak daralma (~−%4).",
+      "keywords": [
+        "reel"
+      ],
+      "negKeywords": [
+        "daral",
+        "negatif",
+        "eksi",
+        "küçül",
+        "geril",
+        "düş"
+      ]
+    },
+    {
+      "id": "lengthening-ccc",
+      "signal": "ccc",
+      "detail": "Nakit dönüşüm süresi 8 çeyrekte ~45 günden ~165 güne uzadı — nakit baskısı.",
+      "keywords": [
+        "nakit dönüşüm",
+        "nakit döngüsü",
+        "ccc"
+      ],
+      "trendKeywords": [
+        "uza",
+        "art",
+        "yüksel",
+        "kötüleş",
+        "büyü"
+      ]
+    },
+    {
+      "id": "margin-erosion",
+      "signal": "netMargin",
+      "detail": "Net marj %8’den %2’ye eridi — satış büyürken karlılık düşüyor.",
+      "keywords": [
+        "marj"
+      ],
+      "erosionKeywords": [
+        "eri",
+        "düş",
+        "daral",
+        "azal",
+        "gerile"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,19 @@
 'use client';
 
-import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  Cell,
+  LabelList,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Scatter,
+  ScatterChart,
+  XAxis,
+  YAxis,
+  ZAxis,
+} from 'recharts';
 import type { ReportCharts } from '@/lib/report';
 
 const AXIS = 'var(--color-faint)';
@@ -51,6 +64,72 @@ export function CategoryTrendChart({ data }: { data: NonNullable<ReportCharts['c
           <LabelList dataKey="changePct" position="right" formatter={(v) => `${Number(v) > 0 ? '+' : ''}${tl(Number(v), 1)}%`} fill={AXIS} fontSize={11} />
         </Bar>
       </BarChart>
+    </Frame>
+  );
+}
+
+const QUAD_COLOR: Record<string, string> = { star: POSITIVE, plowhorse: WARNING, puzzle: 'var(--color-opportunity)', dog: CRITICAL };
+
+export function MenuMatrixChart({ data }: { data: NonNullable<ReportCharts['menuMatrix']> }) {
+  return (
+    <Frame title="Menü Mühendisliği — popülerlik × katkı payı" height={300}>
+      <ScatterChart margin={{ left: 4, right: 12, top: 8, bottom: 20 }}>
+        <XAxis type="number" dataKey="popularityPct" name="Popülerlik" unit="%" tick={{ fill: AXIS, fontSize: 11 }} axisLine={{ stroke: 'var(--color-border)' }} tickLine={false} />
+        <YAxis type="number" dataKey="cmPerUnit" name="Katkı/adet" unit="₺" tick={{ fill: AXIS, fontSize: 11 }} axisLine={{ stroke: 'var(--color-border)' }} tickLine={false} />
+        <ZAxis range={[80, 80]} />
+        <Scatter data={data} isAnimationActive={false}>
+          {data.map((d) => (
+            <Cell key={d.item} fill={QUAD_COLOR[d.quadrant] ?? ACCENT} />
+          ))}
+          <LabelList dataKey="item" position="top" fill={AXIS} fontSize={10} />
+        </Scatter>
+      </ScatterChart>
+    </Frame>
+  );
+}
+
+export function DaypartMarginChart({ data }: { data: NonNullable<ReportCharts['daypartMargin']> }) {
+  return (
+    <Frame title="Öğün bazlı food cost %" height={Math.max(140, data.length * 40)}>
+      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 48, top: 4, bottom: 4 }}>
+        <XAxis type="number" hide />
+        <YAxis type="category" dataKey="daypart" width={70} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
+        <Bar dataKey="foodCostPct" radius={[0, 4, 4, 0]} isAnimationActive={false}>
+          {data.map((d) => (
+            <Cell key={d.daypart} fill={(d.foodCostPct ?? 0) > 40 ? CRITICAL : (d.foodCostPct ?? 0) > 32 ? WARNING : POSITIVE} />
+          ))}
+          <LabelList dataKey="foodCostPct" position="right" formatter={(v) => `%${tl(Number(v), 1)}`} fill={AXIS} fontSize={11} />
+        </Bar>
+      </BarChart>
+    </Frame>
+  );
+}
+
+export function RealReturnChart({ data }: { data: NonNullable<ReportCharts['realReturn']> }) {
+  return (
+    <Frame title="TÜFE-reel büyüme (yıllık)" height={170}>
+      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 56, top: 4, bottom: 4 }}>
+        <XAxis type="number" hide />
+        <YAxis type="category" dataKey="label" width={80} tick={{ fill: AXIS, fontSize: 12 }} axisLine={false} tickLine={false} />
+        <Bar dataKey="value" radius={[0, 4, 4, 0]} isAnimationActive={false}>
+          {data.map((d) => (
+            <Cell key={d.label} fill={d.value < 0 ? CRITICAL : d.label.toLowerCase().includes('tüfe') ? WARNING : ACCENT} />
+          ))}
+          <LabelList dataKey="value" position="right" formatter={(v) => `%${tl(Number(v), 1)}`} fill={AXIS} fontSize={11} />
+        </Bar>
+      </BarChart>
+    </Frame>
+  );
+}
+
+export function CccTrendChart({ data }: { data: NonNullable<ReportCharts['cccTrend']> }) {
+  return (
+    <Frame title="Nakit dönüşüm süresi (gün)" height={200}>
+      <LineChart data={data} margin={{ left: 4, right: 12, top: 8, bottom: 4 }}>
+        <XAxis dataKey="period" tick={{ fill: AXIS, fontSize: 10 }} axisLine={{ stroke: 'var(--color-border)' }} tickLine={false} />
+        <YAxis tick={{ fill: AXIS, fontSize: 11 }} axisLine={false} tickLine={false} width={32} />
+        <Line type="monotone" dataKey="ccc" stroke={CRITICAL} strokeWidth={2} dot={{ r: 3, fill: CRITICAL }} isAnimationActive={false} />
+      </LineChart>
     </Frame>
   );
 }

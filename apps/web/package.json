@@ -13,6 +13,8 @@
     "seed:fixture": "tsx scripts/seed-fixture.ts"
   },
   "dependencies": {
+    "@mercek/adapter-finance": "workspace:*",
+    "@mercek/adapter-fnb": "workspace:*",
     "@mercek/adapter-retail": "workspace:*",
     "@mercek/core": "workspace:*",
     "@mercek/db": "workspace:*",

@@ -54,9 +54,16 @@ export interface KpiView {
 }
 
 export interface ReportCharts {
+  // Retail
   pareto?: { label: string; value: number }[];
   categoryTrend?: { category: string; first: number; last: number; changePct: number }[];
   returnBySku?: { sku: string; returnRatePct: number; sales: number }[];
+  // F&B
+  menuMatrix?: { item: string; popularityPct: number; cmPerUnit: number; quadrant: string }[];
+  daypartMargin?: { daypart: string; revenuePct: number; foodCostPct: number | null }[];
+  // Finance
+  realReturn?: { label: string; value: number }[];
+  cccTrend?: { period: string; ccc: number | null }[];
 }
 
 const trNum = (n: number, frac = 0): string =>

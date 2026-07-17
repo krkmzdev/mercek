@@ -1,7 +1,7 @@
 /**
- * Pre-computes the Retail fixture analysis and seeds it as a cached fixture
- * report (spec §9.4: "fixtures are pre-computed and cached — a visitor clicking
- * 'örnek veriyi dene' costs $0"). Run: pnpm --filter @mercek/web seed:fixture
+ * Pre-computes the sector fixture analyses and seeds them as cached fixture
+ * reports (spec §9.4: a visitor clicking "örnek veriyi dene" costs $0).
+ * Run: pnpm --filter @mercek/web seed:fixture
  */
 import './load-env';
 import { readFileSync } from 'node:fs';
@@ -13,17 +13,19 @@ import {
   extract,
   googleModelResolver,
   resolveGoogleApiKeyFromProcess,
+  type EnrichResult,
 } from '@mercek/core';
-import { computeSignals, retailAdapter } from '@mercek/adapter-retail';
+import { computeSignals as retailSignals, retailAdapter } from '@mercek/adapter-retail';
+import { computeFnbSignals, fnbAdapter } from '@mercek/adapter-fnb';
+import { computeFinanceSignals, financeAdapter } from '@mercek/adapter-finance';
 import { prisma } from '@mercek/db';
-import type { LlmRouter } from '@mercek/sdk';
+import type { LlmRouter, SectorAdapter } from '@mercek/sdk';
 import { buildReportView, type ReportCharts } from '../lib/report';
 
-const FIXTURE_ID = 'retail-demo';
-const fixturePath = resolve(process.cwd(), '../../fixtures/retail/retail-90d.csv');
+const fixturesRoot = resolve(process.cwd(), '../../fixtures');
 
 const stubLlm: LlmRouter = {
-  complete: () => Promise.reject(new Error('map should not need the LLM')),
+  complete: () => Promise.reject(new Error('map needs no LLM')),
   stream: () => {
     throw new Error('unused');
   },
@@ -42,41 +44,91 @@ async function withRetry<T>(fn: () => Promise<T>, attempts = 5): Promise<T> {
   throw new Error('unreachable');
 }
 
-async function main(): Promise<void> {
-  const bytes = new Uint8Array(readFileSync(fixturePath));
-  const tables = await extract({ fileId: FIXTURE_ID, filename: 'retail-90d.csv', bytes });
-  const enriched = await enrich(retailAdapter, tables, { llm: stubLlm, locale: 'tr' });
+/* eslint-disable @typescript-eslint/no-explicit-any -- pipeline output is erased across sectors */
+type AnyEnrich = EnrichResult<any>;
 
-  const router = createLlmRouter({ resolveModel: googleModelResolver(resolveGoogleApiKeyFromProcess()) });
-  console.log('Canlı analiz (fixture, bir kez)…');
-  const analysis = await withRetry(() => analyze(retailAdapter, enriched, router, 'tr'));
+interface SectorSeed {
+  id: string;
+  sector: 'RETAIL' | 'FNB' | 'FINANCE';
+  adapter: SectorAdapter<any>;
+  file: string;
+  buildCharts: (e: AnyEnrich) => ReportCharts;
+}
 
-  const s = computeSignals(enriched.data);
-  const paretoKpi = enriched.kpis.find((k) => k.kpiId === 'pareto');
-  const charts: ReportCharts = {
-    pareto: paretoKpi?.breakdown?.map((b) => ({ label: b.label, value: b.value.toNumber() })),
-    categoryTrend: s.categoryTrend.map((c) => ({
-      category: c.category,
-      first: c.firstRev,
-      last: c.lastRev,
-      changePct: c.changePct,
-    })),
-    returnBySku: s.returnBySku.map((r) => ({ sku: r.sku, returnRatePct: r.returnRatePct, sales: r.sales })),
-  };
+const SEEDS: SectorSeed[] = [
+  {
+    id: 'retail-demo',
+    sector: 'RETAIL',
+    adapter: retailAdapter as SectorAdapter<any>,
+    file: 'retail/retail-90d.csv',
+    buildCharts: (e) => {
+      const s = retailSignals(e.data);
+      const pareto = e.kpis.find((k: any) => k.kpiId === 'pareto');
+      return {
+        pareto: pareto?.breakdown?.map((b: any) => ({ label: b.label, value: b.value.toNumber() })),
+        categoryTrend: s.categoryTrend.map((c) => ({ category: c.category, first: c.firstRev, last: c.lastRev, changePct: c.changePct })),
+        returnBySku: s.returnBySku.map((r) => ({ sku: r.sku, returnRatePct: r.returnRatePct, sales: r.sales })),
+      };
+    },
+  },
+  {
+    id: 'fnb-demo',
+    sector: 'FNB',
+    adapter: fnbAdapter as SectorAdapter<any>,
+    file: 'fnb/fnb-60d.csv',
+    buildCharts: (e) => {
+      const s = computeFnbSignals(e.data);
+      return {
+        menuMatrix: s.menu?.items.map((i) => ({ item: i.item, popularityPct: i.popularityPct, cmPerUnit: i.cmPerUnit, quadrant: i.quadrant })),
+        daypartMargin: s.daypartMargin.map((d) => ({ daypart: d.daypart, revenuePct: d.revenuePct, foodCostPct: d.foodCostPct })),
+      };
+    },
+  },
+  {
+    id: 'finance-demo',
+    sector: 'FINANCE',
+    adapter: financeAdapter as SectorAdapter<any>,
+    file: 'finance/finance-8q.csv',
+    buildCharts: (e) => {
+      const s = computeFinanceSignals(e.data);
+      const rr = s.realReturn;
+      return {
+        realReturn: rr
+          ? [
+              { label: 'Nominal', value: rr.nominalGrowthPct },
+              { label: 'TÜFE', value: rr.inflationPct },
+              { label: 'Reel', value: rr.realGrowthPct },
+            ]
+          : undefined,
+        cccTrend: s.ccc.map((c) => ({ period: c.period, ccc: c.ccc })),
+      };
+    },
+  },
+];
+
+async function seedOne(seed: SectorSeed, router: LlmRouter): Promise<void> {
+  const bytes = new Uint8Array(readFileSync(resolve(fixturesRoot, seed.file)));
+  const filename = seed.file.split('/').pop()!;
+  const tables = await extract({ fileId: seed.id, filename, bytes });
+  const enriched = await enrich(seed.adapter, tables, { llm: stubLlm, locale: 'tr' });
+  const analysis = await withRetry(() => analyze(seed.adapter, enriched, router, 'tr'));
+
+  const rowsOrPeriods = (enriched.data as { rows?: unknown[]; periods?: unknown[] });
+  const rowCount = rowsOrPeriods.rows?.length ?? rowsOrPeriods.periods?.length ?? 0;
 
   const view = buildReportView({
-    id: FIXTURE_ID,
-    adapter: retailAdapter as unknown as Parameters<typeof buildReportView>[0]['adapter'],
-    enriched: enriched as unknown as Parameters<typeof buildReportView>[0]['enriched'],
+    id: seed.id,
+    adapter: seed.adapter as SectorAdapter<unknown>,
+    enriched: enriched as EnrichResult<unknown>,
     analysis,
-    charts,
-    source: { filename: 'retail-90d.csv', rows: enriched.data.rows.length },
+    charts: seed.buildCharts(enriched),
+    source: { filename, rows: rowCount },
     isFixture: true,
     generatedAt: new Date().toISOString(),
   });
 
   const data = {
-    sector: 'RETAIL' as const,
+    sector: seed.sector,
     status: 'COMPLETE' as const,
     isFixture: true,
     provider: 'google',
@@ -85,22 +137,21 @@ async function main(): Promise<void> {
     insight: view as unknown as object,
     purgeAt: new Date('2099-01-01'),
   };
+  await prisma.analysis.upsert({ where: { id: seed.id }, create: { id: seed.id, ...data }, update: data });
+  console.log(`  ✓ /r/${seed.id} · ${rowCount} kayıt · ${analysis.insight.findings.length} bulgu · ${analysis.costUsd.toFixed(6)} USD`);
+}
 
-  await prisma.analysis.upsert({
-    where: { id: FIXTURE_ID },
-    create: { id: FIXTURE_ID, ...data },
-    update: data,
-  });
-
-  console.log(
-    `Seeded /r/${FIXTURE_ID} · ${enriched.data.rows.length} satır · ${analysis.insight.findings.length} bulgu · maliyet ${analysis.costUsd.toFixed(6)} USD · evidence flag ${analysis.evidence.flagRate}`,
-  );
+async function main(): Promise<void> {
+  const router = createLlmRouter({ resolveModel: googleModelResolver(resolveGoogleApiKeyFromProcess()) });
+  for (const seed of SEEDS) {
+    console.log(`${seed.sector} seed…`);
+    await seedOne(seed, router);
+  }
   process.exitCode = 0;
 }
 
 main().catch((err: unknown) => {
   const e = err as { code?: string; message?: string };
-  console.error('PRISMA CODE:', e.code);
-  console.error('MESSAGE:', e.message);
+  console.error('SEED FAILED:', e.code ?? '', e.message ?? err);
   process.exitCode = 1;
 });
