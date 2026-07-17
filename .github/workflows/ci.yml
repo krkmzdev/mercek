@@ -12,6 +12,10 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    # Dummy connection string so `prisma generate` can resolve DATABASE_URL.
+    # Generate does not connect; CI never touches a real database.
+    env:
+      DATABASE_URL: postgresql://mercek:mercek@localhost:5432/mercek
     steps:
       - uses: actions/checkout@v4
 

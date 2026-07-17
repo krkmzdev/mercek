@@ -4,6 +4,7 @@ import {
   UpstashRateLimiter,
   checkDailyCeiling,
   createDbSpendTracker,
+  defaultRateLimits,
   validateUpload,
   type RateLimiter,
 } from '@mercek/core';
@@ -20,7 +21,12 @@ function rateLimiter(): RateLimiter | null {
   const url = process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN;
   if (!url || !token) return null;
-  return new UpstashRateLimiter(new Redis({ url, token }));
+  const config = {
+    guestPerDay: Number(process.env.GUEST_ANALYSES_PER_DAY ?? defaultRateLimits.guestPerDay),
+    authedPerDay: Number(process.env.AUTHED_ANALYSES_PER_DAY ?? defaultRateLimits.authedPerDay),
+    deepPerDay: Number(process.env.DEEP_ANALYSES_PER_DAY ?? defaultRateLimits.deepPerDay),
+  };
+  return new UpstashRateLimiter(new Redis({ url, token }), config);
 }
 
 function guestIp(req: Request): string {
