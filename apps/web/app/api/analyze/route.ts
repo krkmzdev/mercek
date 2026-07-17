@@ -55,12 +55,16 @@ export async function POST(req: Request): Promise<NextResponse> {
 
   const ip = guestIp(req);
 
-  // Rate limit (guest: 3/IP/gün).
+  // Rate limit (guest: GUEST_ANALYSES_PER_DAY/IP/gün).
   const rl = rateLimiter();
   if (rl) {
     const r = await rl.limit(ip, 'guest');
     if (!r.success) {
-      return NextResponse.json({ error: 'Günlük demo kotası doldu (3 analiz). Yarın tekrar deneyin.' }, { status: 429 });
+      const perDay = Number(process.env.GUEST_ANALYSES_PER_DAY ?? defaultRateLimits.guestPerDay);
+      return NextResponse.json(
+        { error: `Günlük demo kotası doldu (${perDay} analiz). Yarın tekrar deneyin.` },
+        { status: 429 },
+      );
     }
   }
 
