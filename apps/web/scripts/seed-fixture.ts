@@ -15,14 +15,15 @@ import {
   resolveGoogleApiKeyFromProcess,
   type EnrichResult,
 } from '@mercek/core';
-import { computeSignals as retailSignals, retailAdapter } from '@mercek/adapter-retail';
-import { computeFnbSignals, fnbAdapter } from '@mercek/adapter-fnb';
-import { computeFinanceSignals, financeAdapter } from '@mercek/adapter-finance';
-import { computeMfgSignals, manufacturingAdapter } from '@mercek/adapter-manufacturing';
-import { computeSaasSignals, saasAdapter } from '@mercek/adapter-saas';
+import { retailAdapter } from '@mercek/adapter-retail';
+import { fnbAdapter } from '@mercek/adapter-fnb';
+import { financeAdapter } from '@mercek/adapter-finance';
+import { manufacturingAdapter } from '@mercek/adapter-manufacturing';
+import { saasAdapter } from '@mercek/adapter-saas';
 import { prisma } from '@mercek/db';
-import type { LlmRouter, SectorAdapter } from '@mercek/sdk';
-import { buildReportView, type ReportCharts } from '../lib/report';
+import type { LlmRouter, SectorAdapter, SectorId } from '@mercek/sdk';
+import { buildReportView } from '../lib/report';
+import { buildChartsFor } from '../lib/build-charts';
 
 const fixturesRoot = resolve(process.cwd(), '../../fixtures');
 
@@ -47,109 +48,19 @@ async function withRetry<T>(fn: () => Promise<T>, attempts = 5): Promise<T> {
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any -- pipeline output is erased across sectors */
-type AnyEnrich = EnrichResult<any>;
-
 interface SectorSeed {
   id: string;
-  sector: 'RETAIL' | 'FNB' | 'FINANCE' | 'MANUFACTURING' | 'SAAS';
+  sector: SectorId;
   adapter: SectorAdapter<any>;
   file: string;
-  buildCharts: (e: AnyEnrich) => ReportCharts;
 }
 
 const SEEDS: SectorSeed[] = [
-  {
-    id: 'retail-demo',
-    sector: 'RETAIL',
-    adapter: retailAdapter as SectorAdapter<any>,
-    file: 'retail/retail-90d.csv',
-    buildCharts: (e) => {
-      const s = retailSignals(e.data);
-      const pareto = e.kpis.find((k: any) => k.kpiId === 'pareto');
-      return {
-        pareto: pareto?.breakdown?.map((b: any) => ({ label: b.label, value: b.value.toNumber() })),
-        categoryTrend: s.categoryTrend.map((c) => ({ category: c.category, first: c.firstRev, last: c.lastRev, changePct: c.changePct })),
-        returnBySku: s.returnBySku.map((r) => ({ sku: r.sku, returnRatePct: r.returnRatePct, sales: r.sales })),
-      };
-    },
-  },
-  {
-    id: 'fnb-demo',
-    sector: 'FNB',
-    adapter: fnbAdapter as SectorAdapter<any>,
-    file: 'fnb/fnb-60d.csv',
-    buildCharts: (e) => {
-      const s = computeFnbSignals(e.data);
-      return {
-        menuMatrix: s.menu?.items.map((i) => ({ item: i.item, popularityPct: i.popularityPct, cmPerUnit: i.cmPerUnit, quadrant: i.quadrant })),
-        daypartMargin: s.daypartMargin.map((d) => ({ daypart: d.daypart, revenuePct: d.revenuePct, foodCostPct: d.foodCostPct })),
-      };
-    },
-  },
-  {
-    id: 'finance-demo',
-    sector: 'FINANCE',
-    adapter: financeAdapter as SectorAdapter<any>,
-    file: 'finance/finance-8q.csv',
-    buildCharts: (e) => {
-      const s = computeFinanceSignals(e.data);
-      const rr = s.realReturn;
-      return {
-        realReturn: rr
-          ? [
-              { label: 'Nominal', value: rr.nominalGrowthPct },
-              { label: 'TÜFE', value: rr.inflationPct },
-              { label: 'Reel', value: rr.realGrowthPct },
-            ]
-          : undefined,
-        cccTrend: s.ccc.map((c) => ({ period: c.period, ccc: c.ccc })),
-      };
-    },
-  },
-  {
-    id: 'manufacturing-demo',
-    sector: 'MANUFACTURING',
-    adapter: manufacturingAdapter as SectorAdapter<any>,
-    file: 'manufacturing/mfg-30d.csv',
-    buildCharts: (e) => {
-      const s = computeMfgSignals(e.data);
-      const pct = (x: number): number => Math.round(x * 1000) / 10;
-      return {
-        oeeDecomposition: s.overall
-          ? [
-              { label: 'Kullanılabilirlik', value: pct(s.overall.availability) },
-              { label: 'Performans', value: pct(s.overall.performance) },
-              { label: 'Kalite', value: pct(s.overall.quality) },
-              { label: 'OEE', value: pct(s.overall.oee) },
-            ]
-          : undefined,
-        machineOee: s.byMachine.map((m) => ({ machine: m.machineId, oee: pct(m.oee), availability: pct(m.availability) })),
-        downtimePareto: s.downtime.map((d) => ({ reason: d.reason, downtimeMin: d.downtimeMin })),
-      };
-    },
-  },
-  {
-    id: 'saas-demo',
-    sector: 'SAAS',
-    adapter: saasAdapter as SectorAdapter<any>,
-    file: 'saas/saas-18mo.csv',
-    buildCharts: (e) => {
-      const s = computeSaasSignals(e.data);
-      const m = s.movement;
-      return {
-        mrrTrend: s.mrrTrend.map((t) => ({ month: t.month, mrr: t.mrr })),
-        mrrMovement: m
-          ? [
-              { label: 'Yeni', value: Math.round(m.newMrr) },
-              { label: 'Genişleme', value: Math.round(m.expansion) },
-              { label: 'Daralma', value: -Math.round(m.contraction) },
-              { label: 'Churn', value: -Math.round(m.churn) },
-            ]
-          : undefined,
-        cohortRetention: s.cohorts.slice(0, 3).map((c) => ({ cohort: c.cohort, retentionPct: c.retentionPct })),
-      };
-    },
-  },
+  { id: 'retail-demo', sector: 'RETAIL', adapter: retailAdapter as SectorAdapter<any>, file: 'retail/retail-90d.csv' },
+  { id: 'fnb-demo', sector: 'FNB', adapter: fnbAdapter as SectorAdapter<any>, file: 'fnb/fnb-60d.csv' },
+  { id: 'finance-demo', sector: 'FINANCE', adapter: financeAdapter as SectorAdapter<any>, file: 'finance/finance-8q.csv' },
+  { id: 'manufacturing-demo', sector: 'MANUFACTURING', adapter: manufacturingAdapter as SectorAdapter<any>, file: 'manufacturing/mfg-30d.csv' },
+  { id: 'saas-demo', sector: 'SAAS', adapter: saasAdapter as SectorAdapter<any>, file: 'saas/saas-18mo.csv' },
 ];
 
 async function seedOne(seed: SectorSeed, router: LlmRouter): Promise<void> {
@@ -159,15 +70,15 @@ async function seedOne(seed: SectorSeed, router: LlmRouter): Promise<void> {
   const enriched = await enrich(seed.adapter, tables, { llm: stubLlm, locale: 'tr' });
   const analysis = await withRetry(() => analyze(seed.adapter, enriched, router, 'tr'));
 
-  const rowsOrPeriods = (enriched.data as { rows?: unknown[]; periods?: unknown[] });
-  const rowCount = rowsOrPeriods.rows?.length ?? rowsOrPeriods.periods?.length ?? 0;
+  const d = enriched.data as { rows?: unknown[]; periods?: unknown[] };
+  const rowCount = d.rows?.length ?? d.periods?.length ?? 0;
 
   const view = buildReportView({
     id: seed.id,
     adapter: seed.adapter as SectorAdapter<unknown>,
     enriched: enriched as EnrichResult<unknown>,
     analysis,
-    charts: seed.buildCharts(enriched),
+    charts: buildChartsFor(seed.sector, enriched),
     source: { filename, rows: rowCount },
     isFixture: true,
     generatedAt: new Date().toISOString(),
