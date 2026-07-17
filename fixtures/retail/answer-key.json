@@ -1,0 +1,49 @@
+{
+  "sector": "RETAIL",
+  "fixtureId": "retail-90d",
+  "rowCount": 2682,
+  "plantedProblems": [
+    {
+      "id": "return-anomaly",
+      "signal": "returnBySku",
+      "detail": "SKU AYK-003 iade oranı ~%30 — kategori ortalamasının (~%7) çok üstünde.",
+      "keywords": [
+        "ayk-003",
+        "iade"
+      ]
+    },
+    {
+      "id": "category-decline",
+      "signal": "categoryTrend",
+      "detail": "Elektronik kategorisi 90 gün boyunca sessizce ~%60 daraldı; toplam ciro diğer kategorilerin büyümesiyle maskelendi.",
+      "keywords": [
+        "elektronik"
+      ],
+      "declineKeywords": [
+        "düş",
+        "azal",
+        "geril",
+        "daral",
+        "küçül"
+      ]
+    },
+    {
+      "id": "discount-margin",
+      "signal": "weeklyDiscountMargin",
+      "detail": "Yaklaşık 7. hafta Giyim’de %50 indirim ciroyu şişirip brüt marjı çökertti (negatif marj).",
+      "keywords": [
+        "indirim",
+        "iskonto",
+        "marj"
+      ],
+      "marginKeywords": [
+        "çök",
+        "düş",
+        "negatif",
+        "erime",
+        "erit",
+        "zarar"
+      ]
+    }
+  ]
+}

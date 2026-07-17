@@ -1,5 +1,3 @@
-export { parseLocaleNumber } from './parse-number';
-export type { ParsedNumber, NumberLocale, ParseNumberOptions } from './parse-number';
 export { parseXlsx } from './xlsx';
 export { parseCsv } from './csv';
 export { parsePdf } from './pdf';

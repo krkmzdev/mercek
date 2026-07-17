@@ -6,23 +6,19 @@ import type { MappingMethod } from './adapter';
  * cheaper, faster, and more impressive to explain.
  */
 
-const TR_MAP: Record<string, string> = {
-  ş: 's',
-  ı: 'i',
-  ğ: 'g',
-  ü: 'u',
-  ö: 'o',
-  ç: 'c',
-  â: 'a',
-  î: 'i',
-  û: 'u',
-};
+/**
+ * Lowercase, transliterate Turkish letters, strip punctuation, collapse space.
+ * Uses NFD + combining-mark stripping (handles ü ö ç ş ğ â and the dotted `İ`),
+ * plus an explicit `ı → i` (dotless i does not decompose).
+ */
+const COMBINING_MARKS = new RegExp('[\\u0300-\\u036f]', 'g');
 
-/** Lowercase, transliterate Turkish letters, strip punctuation, collapse space. */
 export function normalizeHeader(header: string): string {
   return header
     .toLowerCase()
-    .replace(/[şığüöçâîû]/g, (c) => TR_MAP[c] ?? c)
+    .replace(/ı/g, 'i')
+    .normalize('NFD')
+    .replace(COMBINING_MARKS, '')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
 }

@@ -1,9 +1,8 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import { z } from 'zod';
-import type { CellValue, ExtractedTable } from '@mercek/sdk';
+import { parseLocaleNumber, type CellValue, type ExtractedTable } from '@mercek/sdk';
 import { ExtractionError, type ParseInput } from './input';
-import { parseLocaleNumber } from './parse-number';
 
 /** Structured-output contract for vision extraction (spec §7.3). */
 export const VisionExtractSchema = z.object({
