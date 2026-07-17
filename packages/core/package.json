@@ -14,7 +14,8 @@
     "test": "vitest run",
     "gen:fixtures": "tsx scripts/gen-fixtures.ts",
     "verify:purge": "tsx scripts/verify-ingest-purge.ts",
-    "verify:live": "tsx scripts/verify-live.ts"
+    "verify:live": "tsx scripts/verify-live.ts",
+    "demo:analyze": "tsx scripts/demo-analyze.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "4.0.17",
