@@ -45,3 +45,9 @@ jobs:
 
       - name: SDK independence (§4)
         run: pnpm check:sdk
+
+      # Derleme kırılmalarını yakalar. Yalnız API route ve force-dynamic rapor
+      # sayfası DB kullanır; ikisi de prerender edilmediği için sahte
+      # DATABASE_URL yeterli, gerçek bir bağlantı gerekmez.
+      - name: Build (web)
+        run: pnpm --filter @mercek/web build

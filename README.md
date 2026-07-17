@@ -4,6 +4,11 @@
 
 **Sektöre duyarlı AI analist: beş sektör uzmanı, tek çatı.**
 
+[![CI](https://github.com/krkmzdev/mercek/actions/workflows/ci.yml/badge.svg)](https://github.com/krkmzdev/mercek/actions/workflows/ci.yml)
+[![Lisans: MIT](https://img.shields.io/badge/Lisans-MIT-2f7d63.svg)](LICENSE)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6.svg)
+![Next.js](https://img.shields.io/badge/Next.js-16-111111.svg)
+
 Ham operasyon verinizi (Excel, CSV, PDF, ekran görüntüsü), o sektörün diline
 hâkim bir uzmanın gözüyle okur. Size içgörü, benchmark karşılaştırması ve aksiyon
 önerisi sunar; üstelik ürettiği her sayı, kaynak hücresine kadar izlenebilir.

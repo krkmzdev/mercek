@@ -34,6 +34,9 @@ export function UploadAnalyzer({ sector, sectorName }: { sector: string; sectorN
   return (
     <div className="flex flex-col gap-3">
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={`${sectorName} verisi yükle: Excel, CSV, PDF veya ekran görüntüsü`}
         onDragOver={(e) => {
           e.preventDefault();
           setDragOver(true);
@@ -46,7 +49,13 @@ export function UploadAnalyzer({ sector, sectorName }: { sector: string; sectorN
           if (f) setFile(f);
         }}
         onClick={() => inputRef.current?.click()}
-        className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-colors ${
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            inputRef.current?.click();
+          }
+        }}
+        className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
           dragOver ? 'border-accent bg-accent/5' : 'border-border hover:border-borderStrong'
         }`}
       >

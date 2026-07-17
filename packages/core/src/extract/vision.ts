@@ -23,9 +23,12 @@ export interface VisionConfig {
   model: string;
   /** Google API key; falls back to GOOGLE_GENERATIVE_AI_API_KEY when omitted. */
   apiKey?: string;
-  // TODO(S1/S4): §7.3 wants Google media_resolution: HIGH for OCR-class
-  // accuracy. Wire it via generateObject `providerOptions.google` once the
-  // exact @ai-sdk/google option key is verified against a live key.
+  /**
+   * Image/PDF detail level (spec §7.3). OCR-class extraction wants "high" so
+   * small or blurry digits are not misread; it costs a few extra tokens.
+   * Defaults to "high".
+   */
+  mediaResolution?: 'low' | 'medium' | 'high' | 'ultra_high';
 }
 
 const VISION_PROMPT = [
@@ -64,6 +67,8 @@ export function createVisionExtractor(
       const { object } = await generateObject({
         model: google(config.model),
         schema: VisionExtractSchema,
+        // §7.3: HIGH detail for OCR-class accuracy on small digits.
+        providerOptions: { google: { mediaResolution: config.mediaResolution ?? 'high' } },
         messages: [
           {
             role: 'user',
