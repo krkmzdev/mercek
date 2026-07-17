@@ -3,8 +3,14 @@ import type { KpiView, ReportView } from '@/lib/report';
 import {
   CategoryTrendChart,
   CccTrendChart,
+  CohortRetentionChart,
   DaypartMarginChart,
+  DowntimeParetoChart,
+  MachineOeeChart,
   MenuMatrixChart,
+  MrrMovementChart,
+  MrrTrendChart,
+  OeeDecompositionChart,
   ParetoChart,
   RealReturnChart,
   ReturnBySkuChart,
@@ -146,7 +152,7 @@ export function ReportViewComponent({ view }: { view: ReportView }) {
       </Section>
 
       {/* Charts */}
-      {(charts.pareto || charts.categoryTrend || charts.returnBySku || charts.menuMatrix || charts.realReturn || charts.cccTrend) && (
+      {hasCharts(charts) && (
         <Section title="Görselleştirmeler">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {charts.categoryTrend && <CategoryTrendChart data={charts.categoryTrend} />}
@@ -164,6 +170,20 @@ export function ReportViewComponent({ view }: { view: ReportView }) {
             {charts.daypartMargin && <DaypartMarginChart data={charts.daypartMargin} />}
             {charts.realReturn && <RealReturnChart data={charts.realReturn} />}
             {charts.cccTrend && <CccTrendChart data={charts.cccTrend} />}
+            {charts.oeeDecomposition && <OeeDecompositionChart data={charts.oeeDecomposition} />}
+            {charts.machineOee && <MachineOeeChart data={charts.machineOee} />}
+            {charts.downtimePareto && (
+              <div className="lg:col-span-2">
+                <DowntimeParetoChart data={charts.downtimePareto} />
+              </div>
+            )}
+            {charts.mrrTrend && <MrrTrendChart data={charts.mrrTrend} />}
+            {charts.mrrMovement && <MrrMovementChart data={charts.mrrMovement} />}
+            {charts.cohortRetention && (
+              <div className="lg:col-span-2">
+                <CohortRetentionChart data={charts.cohortRetention} />
+              </div>
+            )}
           </div>
         </Section>
       )}
@@ -261,6 +281,10 @@ export function ReportViewComponent({ view }: { view: ReportView }) {
       </footer>
     </main>
   );
+}
+
+function hasCharts(charts: ReportView['charts']): boolean {
+  return Object.values(charts).some((v) => Array.isArray(v) && v.length > 0);
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

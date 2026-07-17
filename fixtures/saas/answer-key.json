@@ -1,0 +1,41 @@
+{
+  "sector": "SAAS",
+  "fixtureId": "saas-18mo",
+  "rowCount": 8144,
+  "plantedProblems": [
+    {
+      "id": "leaky-bucket",
+      "signal": "nrr",
+      "detail": "MRR büyürken NRR %100 altında — mevcut taban sızdırıyor (sızdıran kova).",
+      "keywords": [
+        "sızdıran",
+        "leaky",
+        "nrr"
+      ]
+    },
+    {
+      "id": "quick-ratio-low",
+      "signal": "quickRatio",
+      "detail": "Quick Ratio ~2 (sağlıklı ~4) — büyüme verimsiz, kazanılan her dolara karşılık ciddi kayıp.",
+      "keywords": [
+        "quick ratio",
+        "quick-ratio"
+      ]
+    },
+    {
+      "id": "churn-masked",
+      "signal": "movement",
+      "detail": "Yüksek churn/daralma, yeni-logo büyümesiyle maskeleniyor.",
+      "keywords": [
+        "churn"
+      ],
+      "maskKeywords": [
+        "maskele",
+        "yeni",
+        "gizl",
+        "örtül",
+        "rağmen"
+      ]
+    }
+  ]
+}

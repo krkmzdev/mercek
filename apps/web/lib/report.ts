@@ -64,6 +64,14 @@ export interface ReportCharts {
   // Finance
   realReturn?: { label: string; value: number }[];
   cccTrend?: { period: string; ccc: number | null }[];
+  // Manufacturing
+  oeeDecomposition?: { label: string; value: number }[];
+  machineOee?: { machine: string; oee: number; availability: number }[];
+  downtimePareto?: { reason: string; downtimeMin: number }[];
+  // SaaS
+  mrrTrend?: { month: string; mrr: number }[];
+  mrrMovement?: { label: string; value: number }[];
+  cohortRetention?: { cohort: string; retentionPct: number[] }[];
 }
 
 const trNum = (n: number, frac = 0): string =>

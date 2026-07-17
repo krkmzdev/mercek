@@ -2,6 +2,8 @@ import { registerAdapter } from '@mercek/core';
 import { retailAdapter } from '@mercek/adapter-retail';
 import { fnbAdapter } from '@mercek/adapter-fnb';
 import { financeAdapter } from '@mercek/adapter-finance';
+import { manufacturingAdapter } from '@mercek/adapter-manufacturing';
+import { saasAdapter } from '@mercek/adapter-saas';
 
 let registered = false;
 
@@ -12,5 +14,7 @@ export function ensureAdaptersRegistered(): void {
   registerAdapter(retailAdapter);
   registerAdapter(fnbAdapter);
   registerAdapter(financeAdapter);
+  registerAdapter(manufacturingAdapter);
+  registerAdapter(saasAdapter);
   registered = true;
 }

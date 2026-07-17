@@ -1,0 +1,33 @@
+{
+  "sector": "MANUFACTURING",
+  "fixtureId": "mfg-30d",
+  "rowCount": 240,
+  "plantedProblems": [
+    {
+      "id": "availability-constraint",
+      "signal": "binding",
+      "detail": "Bağlayıcı kısıt kullanılabilirlik (duruşlar) — kalite/performans değil.",
+      "keywords": [
+        "kullanılabilirlik",
+        "availability",
+        "duruş"
+      ]
+    },
+    {
+      "id": "problem-machine",
+      "signal": "byMachine",
+      "detail": "M3 makinesi kompozit OEE’nin gizlediği düşük kullanılabilirlik sorununu taşıyor.",
+      "keywords": [
+        "m3"
+      ]
+    },
+    {
+      "id": "downtime-pareto",
+      "signal": "downtime",
+      "detail": "En büyük duruş nedeni Kalıp Değişimi.",
+      "keywords": [
+        "kalıp"
+      ]
+    }
+  ]
+}

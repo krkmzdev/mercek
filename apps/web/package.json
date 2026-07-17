@@ -15,7 +15,9 @@
   "dependencies": {
     "@mercek/adapter-finance": "workspace:*",
     "@mercek/adapter-fnb": "workspace:*",
+    "@mercek/adapter-manufacturing": "workspace:*",
     "@mercek/adapter-retail": "workspace:*",
+    "@mercek/adapter-saas": "workspace:*",
     "@mercek/core": "workspace:*",
     "@mercek/db": "workspace:*",
     "@mercek/sdk": "workspace:*",

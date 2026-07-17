@@ -18,6 +18,8 @@ import {
 import { computeSignals as retailSignals, retailAdapter } from '@mercek/adapter-retail';
 import { computeFnbSignals, fnbAdapter } from '@mercek/adapter-fnb';
 import { computeFinanceSignals, financeAdapter } from '@mercek/adapter-finance';
+import { computeMfgSignals, manufacturingAdapter } from '@mercek/adapter-manufacturing';
+import { computeSaasSignals, saasAdapter } from '@mercek/adapter-saas';
 import { prisma } from '@mercek/db';
 import type { LlmRouter, SectorAdapter } from '@mercek/sdk';
 import { buildReportView, type ReportCharts } from '../lib/report';
@@ -49,7 +51,7 @@ type AnyEnrich = EnrichResult<any>;
 
 interface SectorSeed {
   id: string;
-  sector: 'RETAIL' | 'FNB' | 'FINANCE';
+  sector: 'RETAIL' | 'FNB' | 'FINANCE' | 'MANUFACTURING' | 'SAAS';
   adapter: SectorAdapter<any>;
   file: string;
   buildCharts: (e: AnyEnrich) => ReportCharts;
@@ -101,6 +103,50 @@ const SEEDS: SectorSeed[] = [
             ]
           : undefined,
         cccTrend: s.ccc.map((c) => ({ period: c.period, ccc: c.ccc })),
+      };
+    },
+  },
+  {
+    id: 'manufacturing-demo',
+    sector: 'MANUFACTURING',
+    adapter: manufacturingAdapter as SectorAdapter<any>,
+    file: 'manufacturing/mfg-30d.csv',
+    buildCharts: (e) => {
+      const s = computeMfgSignals(e.data);
+      const pct = (x: number): number => Math.round(x * 1000) / 10;
+      return {
+        oeeDecomposition: s.overall
+          ? [
+              { label: 'Kullanılabilirlik', value: pct(s.overall.availability) },
+              { label: 'Performans', value: pct(s.overall.performance) },
+              { label: 'Kalite', value: pct(s.overall.quality) },
+              { label: 'OEE', value: pct(s.overall.oee) },
+            ]
+          : undefined,
+        machineOee: s.byMachine.map((m) => ({ machine: m.machineId, oee: pct(m.oee), availability: pct(m.availability) })),
+        downtimePareto: s.downtime.map((d) => ({ reason: d.reason, downtimeMin: d.downtimeMin })),
+      };
+    },
+  },
+  {
+    id: 'saas-demo',
+    sector: 'SAAS',
+    adapter: saasAdapter as SectorAdapter<any>,
+    file: 'saas/saas-18mo.csv',
+    buildCharts: (e) => {
+      const s = computeSaasSignals(e.data);
+      const m = s.movement;
+      return {
+        mrrTrend: s.mrrTrend.map((t) => ({ month: t.month, mrr: t.mrr })),
+        mrrMovement: m
+          ? [
+              { label: 'Yeni', value: Math.round(m.newMrr) },
+              { label: 'Genişleme', value: Math.round(m.expansion) },
+              { label: 'Daralma', value: -Math.round(m.contraction) },
+              { label: 'Churn', value: -Math.round(m.churn) },
+            ]
+          : undefined,
+        cohortRetention: s.cohorts.slice(0, 3).map((c) => ({ cohort: c.cohort, retentionPct: c.retentionPct })),
       };
     },
   },

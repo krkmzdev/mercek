@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
     '@mercek/adapter-retail',
     '@mercek/adapter-fnb',
     '@mercek/adapter-finance',
+    '@mercek/adapter-manufacturing',
+    '@mercek/adapter-saas',
   ],
   serverExternalPackages: ['exceljs', 'unpdf'],
   // typedRoutes deferred: it injects a `.next/**` reference into next-env.d.ts

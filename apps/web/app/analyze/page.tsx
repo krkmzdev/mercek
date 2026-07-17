@@ -34,8 +34,22 @@ const SECTORS: Sector[] = [
     ready: true,
     demo: '/r/finance-demo',
   },
-  { id: 'MANUFACTURING', name: 'Üretim / İmalat', desc: 'OEE, fire, duruş analizi.', inputs: 'iş emri / makine olayları', ready: false },
-  { id: 'SAAS', name: 'SaaS Metrikleri', desc: 'MRR, churn, NRR, kohort.', inputs: 'abonelik hareketleri', ready: false },
+  {
+    id: 'MANUFACTURING',
+    name: 'Üretim / İmalat',
+    desc: 'OEE (A×P×Q), fire, duruş Pareto.',
+    inputs: 'makine · süre · adet · duruş nedeni',
+    ready: true,
+    demo: '/r/manufacturing-demo',
+  },
+  {
+    id: 'SAAS',
+    name: 'SaaS Metrikleri',
+    desc: 'MRR, NRR, Quick Ratio, kohort.',
+    inputs: 'ay · müşteri · plan · mrr',
+    ready: true,
+    demo: '/r/saas-demo',
+  },
 ];
 
 export default function AnalyzePage() {
