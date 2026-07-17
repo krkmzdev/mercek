@@ -38,10 +38,19 @@ export async function analyzeFile(args: AnalyzeFileArgs): Promise<{ reportId: st
   if (tables.length === 0) throw new Error('Dosyadan tablo çıkarılamadı.');
 
   const enriched = await enrich(adapter, tables, { llm: router, locale: 'tr' });
-  const analysis = await analyze(adapter, enriched, router, 'tr');
 
   const data = enriched.data as { rows?: unknown[]; periods?: unknown[] };
   const rowCount = data.rows?.length ?? data.periods?.length ?? 0;
+
+  // Fail fast (no LLM call) when the file doesn't fit the chosen sector.
+  if (rowCount === 0) {
+    const expected = adapter.meta.expectedInputs[0]?.fields.join(' · ') ?? '';
+    throw new Error(
+      `Bu dosya "${adapter.meta.name.tr}" formatına uymadı. Beklenen sütunlar: ${expected}. Doğru sektörü seçtiğinizden emin olun.`,
+    );
+  }
+
+  const analysis = await analyze(adapter, enriched, router, 'tr');
 
   const created = await prisma.analysis.create({
     data: {

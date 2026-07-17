@@ -68,7 +68,11 @@ export async function POST(req: Request): Promise<NextResponse> {
     const { reportId } = await analyzeFile({ bytes, filename, mimeType: file.type, sector, guestIp: ip });
     return NextResponse.json({ reportId });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Analiz sırasında bir hata oluştu.';
+    const raw = err instanceof Error ? err.message : '';
+    // Map raw AI SDK / schema errors to a friendly, actionable message.
+    const message = /no object generated|schema|match/i.test(raw)
+      ? 'Bu veriden analiz üretilemedi. Dosyanın seçilen sektöre uygun olduğundan ve yeterli satır içerdiğinden emin olun.'
+      : raw || 'Analiz sırasında bir hata oluştu.';
     return NextResponse.json({ error: message }, { status: 422 });
   }
 }
